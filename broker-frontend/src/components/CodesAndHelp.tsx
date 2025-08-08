@@ -1,43 +1,31 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Alert,
+  alpha,
   Box,
   Card,
   CardContent,
-  Typography,
-  Grid,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Chip,
+  Grid,
+  InputAdornment,
+  Paper,
+  Stack,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  TextField,
-  InputAdornment,
   Tabs,
-  Tab,
-  useTheme,
-  alpha,
-  Stack,
-  Alert,
-  Divider
+  TextField,
+  Typography,
+  useTheme
 } from '@mui/material';
-import {
-  ExpandMore,
-  Search,
-  Code,
-  Help,
-  Info,
-  Assessment,
-  AccountBalance,
-  Euro,
-  ShowChart
-} from '@mui/icons-material';
-import { translateTransactionCode, getCodeDescription, translateAssetCategory } from '../utils/codeMapping';
+import {AccountBalance, Assessment, Code, Euro, ExpandMore, Help, Search, ShowChart} from '@mui/icons-material';
 
 const CodesAndHelp: React.FC = () => {
   const theme = useTheme();
