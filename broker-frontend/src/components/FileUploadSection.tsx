@@ -18,6 +18,7 @@ import {
   Analytics,
   TrendingUp
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import FileUpload from './FileUpload';
 
 interface FileUploadSectionProps {
@@ -27,22 +28,23 @@ interface FileUploadSectionProps {
 const FileUploadSection: React.FC<FileUploadSectionProps> = ({ onUploadSuccess }) => {
   const [showUpload, setShowUpload] = useState(false);
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const features = [
     {
       icon: <Analytics />,
-      title: 'Automatische Analyse',
-      description: 'Ihre CSV-Datei wird automatisch analysiert und strukturiert'
+      title: t('upload.features.analysis.title'),
+      description: t('upload.features.analysis.description')
     },
     {
       icon: <TrendingUp />,
-      title: 'Steueroptimierung',
-      description: 'Bereiten Sie Ihre KAP-Formulardaten optimal vor'
+      title: t('upload.features.optimization.title'),
+      description: t('upload.features.optimization.description')
     },
     {
       icon: <FileUploadIcon />,
-      title: 'Sichere Verarbeitung',
-      description: 'Alle Daten werden lokal verarbeitet und nicht gespeichert'
+      title: t('upload.features.security.title'),
+      description: t('upload.features.security.description')
     }
   ];
 
@@ -100,11 +102,11 @@ const FileUploadSection: React.FC<FileUploadSectionProps> = ({ onUploadSuccess }
                     WebkitTextFillColor: 'transparent'
                   }}
                 >
-                  Willkommen bei Broker Analyzer
+                  {t('upload.title')}
                 </Typography>
 
                 <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
-                  Laden Sie Ihre CSV-Datei hoch, um mit der professionellen Analyse Ihrer Broker-Daten zu beginnen
+                  {t('upload.description')}
                 </Typography>
               </Box>
 
@@ -171,7 +173,7 @@ const FileUploadSection: React.FC<FileUploadSectionProps> = ({ onUploadSuccess }
                   }
                 }}
               >
-                CSV-Datei hochladen
+                {t('upload.uploadFile')}
               </Button>
 
               {/* Info */}
@@ -184,8 +186,7 @@ const FileUploadSection: React.FC<FileUploadSectionProps> = ({ onUploadSuccess }
                 }}
               >
                 <Typography variant="body2">
-                  <strong>Unterstützte Formate:</strong> CSV-Dateien von Interactive Brokers,
-                  Comdirect, und anderen gängigen Brokern
+                  <strong>{t('upload.supportedFormats')}</strong>
                 </Typography>
               </Alert>
             </Stack>
@@ -195,7 +196,7 @@ const FileUploadSection: React.FC<FileUploadSectionProps> = ({ onUploadSuccess }
                 onClick={() => setShowUpload(false)}
                 sx={{ mb: 3 }}
               >
-                ← Zurück
+                ← {t('common.back')}
               </Button>
               <FileUpload onUploadSuccess={handleUploadSuccess} />
             </Box>

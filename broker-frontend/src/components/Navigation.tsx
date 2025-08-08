@@ -18,36 +18,39 @@ import {
   TrendingUp as TrendingUpIcon
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LanguageSelector from './LanguageSelector';
 
 const Navigation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const navItems = [
     {
-      label: 'Dashboard',
+      label: t('nav.dashboard'),
       path: '/',
       icon: <DashboardIcon />,
-      description: 'Übersicht'
+      description: t('dashboard.title')
     },
     {
-      label: 'Steueranalyse',
+      label: t('nav.taxAnalysis'),
       path: '/tax-analysis',
       icon: <TaxIcon />,
-      description: 'KAP-Formular'
+      description: t('tax.title')
     },
     {
-      label: 'Datenansicht',
+      label: t('nav.dataExplorer'),
       path: '/data-explorer',
       icon: <DataIcon />,
-      description: 'Alle Sektionen'
+      description: t('explorer.title')
     },
     {
-      label: 'Codes & Hilfe',
+      label: t('nav.help'),
       path: '/help',
       icon: <HelpIcon />,
-      description: 'Dokumentation'
+      description: t('help.title')
     }
   ];
 
@@ -91,13 +94,13 @@ const Navigation: React.FC = () => {
                 WebkitTextFillColor: 'transparent'
               }}
             >
-              Broker Analyzer
+              {t('nav.brandName')}
             </Typography>
           </Box>
 
           <Box sx={{ flexGrow: 1 }} />
 
-          <Box display="flex" gap={1}>
+          <Box display="flex" gap={1} alignItems="center">
             {navItems.map((item) => (
               <Button
                 key={item.path}
@@ -139,6 +142,11 @@ const Navigation: React.FC = () => {
                 />
               </Button>
             ))}
+
+            {/* Language Selector */}
+            <Box sx={{ ml: 2 }}>
+              <LanguageSelector />
+            </Box>
           </Box>
         </Toolbar>
       </Container>

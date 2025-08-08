@@ -31,6 +31,7 @@ import {
   Timeline
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useReportData } from '../hooks/useReportData';
 import FileUploadSection from './FileUploadSection';
 import QuickStatsCards from './QuickStatsCards';
@@ -40,6 +41,7 @@ import PortfolioOverview from './PortfolioOverview';
 const ModernDashboard: React.FC = () => {
   const navigate = useNavigate();
   const theme = useTheme();
+  const { t } = useTranslation();
   const { summary, sections, loading, error, hasUploadedFile, refetch } = useReportData();
 
   if (loading) {
@@ -47,7 +49,7 @@ const ModernDashboard: React.FC = () => {
       <Box sx={{ p: 4 }}>
         <LinearProgress sx={{ mb: 2 }} />
         <Typography variant="body1" color="text.secondary">
-          Lade Dashboard-Daten...
+          {t('common.loading')}...
         </Typography>
       </Box>
     );
@@ -59,28 +61,28 @@ const ModernDashboard: React.FC = () => {
 
   const quickActions = [
     {
-      title: 'Steueranalyse',
-      description: 'KAP-Formular Daten',
+      title: t('nav.taxAnalysis'),
+      description: t('tax.description'),
       icon: <Assessment />,
       color: theme.palette.success.main,
       path: '/tax-analysis',
-      stats: 'Bereit für Export'
+      stats: t('dashboard.ready')
     },
     {
-      title: 'Vollständige Daten',
-      description: 'Alle Sektionen erkunden',
+      title: t('nav.dataExplorer'),
+      description: t('explorer.description'),
       icon: <ShowChart />,
       color: theme.palette.info.main,
       path: '/data-explorer',
-      stats: `${summary?.sectionCount || 0} Sektionen`
+      stats: `${summary?.sectionCount || 0} ${t('dashboard.sections')}`
     },
     {
-      title: 'Codes & Hilfe',
-      description: 'Dokumentation',
+      title: t('nav.help'),
+      description: t('help.description'),
       icon: <Analytics />,
       color: theme.palette.warning.main,
       path: '/help',
-      stats: 'Nachschlagewerk'
+      stats: t('help.title')
     }
   ];
 
@@ -102,15 +104,15 @@ const ModernDashboard: React.FC = () => {
                 WebkitTextFillColor: 'transparent'
               }}
             >
-              Portfolio Dashboard
+              {t('dashboard.title')}
             </Typography>
             <Typography variant="h6" color="text.secondary" sx={{ mb: 2 }}>
-              Aktuelle Datei: {summary?.currentFileName}
+              {t('dashboard.currentFile')}: {summary?.currentFileName}
             </Typography>
           </Box>
 
           <Stack direction="row" spacing={1}>
-            <Tooltip title="Daten aktualisieren">
+            <Tooltip title={t('dashboard.refreshData')}>
               <IconButton onClick={refetch} color="primary">
                 <Refresh />
               </IconButton>
@@ -121,7 +123,7 @@ const ModernDashboard: React.FC = () => {
               onClick={() => navigate('/upload')}
               sx={{ borderRadius: 2 }}
             >
-              Neue Datei
+              {t('dashboard.newFile')}
             </Button>
           </Stack>
         </Box>
@@ -139,7 +141,7 @@ const ModernDashboard: React.FC = () => {
             <Card elevation={2} sx={{ borderRadius: 3 }}>
               <CardContent sx={{ p: 3 }}>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
-                  Schnellzugriff
+                  {t('dashboard.quickAccess')}
                 </Typography>
                 <Stack spacing={2}>
                   {quickActions.map((action, index) => (
@@ -209,7 +211,7 @@ const ModernDashboard: React.FC = () => {
       {/* Bottom Section - Data Insights */}
       <Box sx={{ mt: 4 }}>
         <Typography variant="h5" sx={{ mb: 3, fontWeight: 'bold' }}>
-          Datenübersicht
+          {t('dashboard.dataOverview')}
         </Typography>
 
         <Grid container spacing={3}>
@@ -239,7 +241,7 @@ const ModernDashboard: React.FC = () => {
                   </Box>
 
                   <Typography variant="body2" color="text.secondary" gutterBottom>
-                    {sectionData.dataRows.length} Einträge • {sectionData.headers.length} Spalten
+                    {sectionData.dataRows.length} {t('explorer.entries')} • {sectionData.headers.length} {t('explorer.columns')}
                   </Typography>
 
                   <LinearProgress

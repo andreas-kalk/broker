@@ -35,6 +35,7 @@ import {
   Assessment
 } from '@mui/icons-material';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useReportData } from '../hooks/useReportData';
 import DividendsTable from './DividendsTable';
 import TransactionsTable from './TransactionsTable';
@@ -42,6 +43,7 @@ import { getSectionType, SECTION_TYPES } from '../utils/sectionUtils';
 
 const DataExplorer: React.FC = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -58,12 +60,12 @@ const DataExplorer: React.FC = () => {
   }, [initialSection, sections]);
 
   const categories = [
-    { id: 'all', label: 'Alle Sektionen', icon: <TableChart /> },
-    { id: 'trades', label: 'Handel', icon: <ShowChart /> },
-    { id: 'dividends', label: 'Dividenden', icon: <Euro /> },
-    { id: 'performance', label: 'Performance', icon: <Timeline /> },
-    { id: 'cash', label: 'Liquidität', icon: <AccountBalance /> },
-    { id: 'other', label: 'Sonstige', icon: <Assessment /> }
+    { id: 'all', label: t('explorer.categories.all'), icon: <TableChart /> },
+    { id: 'trades', label: t('explorer.categories.trades'), icon: <ShowChart /> },
+    { id: 'dividends', label: t('explorer.categories.dividends'), icon: <Euro /> },
+    { id: 'performance', label: t('explorer.categories.performance'), icon: <Timeline /> },
+    { id: 'cash', label: t('explorer.categories.cash'), icon: <AccountBalance /> },
+    { id: 'other', label: t('explorer.categories.other'), icon: <Assessment /> }
   ];
 
   const filteredSections = useMemo(() => {
@@ -160,7 +162,7 @@ const DataExplorer: React.FC = () => {
   if (loading) {
     return (
       <Box sx={{ p: 4, textAlign: 'center' }}>
-        <Typography>Lade Daten...</Typography>
+        <Typography>{t('common.loading')}...</Typography>
       </Box>
     );
   }
@@ -178,10 +180,10 @@ const DataExplorer: React.FC = () => {
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-          Daten Explorer
+          {t('explorer.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Durchsuchen und analysieren Sie alle verfügbaren Datensektionen
+          {t('explorer.description')}
         </Typography>
       </Box>
 
@@ -192,7 +194,7 @@ const DataExplorer: React.FC = () => {
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                placeholder="Suche nach Sektionen oder Spalten..."
+                placeholder={t('explorer.search')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{
@@ -231,20 +233,20 @@ const DataExplorer: React.FC = () => {
       <Box>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
           <Typography variant="h6">
-            {filteredSections.length} Sektionen gefunden
+            {filteredSections.length} {t('explorer.sectionsFound')}
           </Typography>
           <Stack direction="row" spacing={1}>
             <Button
               startIcon={<Visibility />}
               onClick={() => setExpandedSections(new Set(filteredSections.map(([name]) => name)))}
             >
-              Alle öffnen
+              {t('explorer.openAll')}
             </Button>
             <Button
               startIcon={<ExpandMore />}
               onClick={() => setExpandedSections(new Set())}
             >
-              Alle schließen
+              {t('explorer.closeAll')}
             </Button>
           </Stack>
         </Box>
@@ -305,20 +307,20 @@ const DataExplorer: React.FC = () => {
                       </Typography>
                       <Box display="flex" gap={1} mt={0.5}>
                         <Chip
-                          label={`${sectionData.dataRows.length} Einträge`}
+                          label={`${sectionData.dataRows.length} ${t('explorer.entries')}`}
                           size="small"
                           variant="outlined"
                           sx={{ borderColor: sectionColor, color: sectionColor }}
                         />
                         <Chip
-                          label={`${sectionData.headers.length} Spalten`}
+                          label={`${sectionData.headers.length} ${t('explorer.columns')}`}
                           size="small"
                           variant="outlined"
                         />
                       </Box>
                     </Box>
 
-                    <Tooltip title="Als CSV exportieren">
+                    <Tooltip title={t('explorer.exportCsv')}>
                       <IconButton
                         onClick={(e) => {
                           e.stopPropagation();
@@ -343,10 +345,10 @@ const DataExplorer: React.FC = () => {
         {filteredSections.length === 0 && (
           <Card elevation={1} sx={{ p: 6, textAlign: 'center', borderRadius: 3 }}>
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              Keine Sektionen gefunden
+              {t('explorer.noSections')}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Versuchen Sie es mit anderen Suchbegriffen oder Kategorien
+              {t('explorer.tryDifferent')}
             </Typography>
           </Card>
         )}

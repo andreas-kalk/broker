@@ -103,7 +103,7 @@ export const brokerTheme = createTheme({
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 2,
   },
   components: {
     MuiButton: {
