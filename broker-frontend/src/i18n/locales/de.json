@@ -1,0 +1,262 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "taxAnalysis": "Steueranalyse",
+    "dataExplorer": "Datenexplorer",
+    "help": "Codes & Hilfe",
+    "optionsCalculator": "Optionsrechner",
+    "brandName": "Broker Analyzer"
+  },
+  "dashboard": {
+    "title": "Portfolio Dashboard",
+    "currentFile": "Aktuelle Datei",
+    "noFileUploaded": "Keine CSV-Datei hochgeladen",
+    "noFileDescription": "Laden Sie eine CSV-Datei hoch, um mit der Analyse Ihrer Broker-Daten zu beginnen.",
+    "uploadFile": "CSV-Datei hochladen",
+    "refreshData": "Daten aktualisieren",
+    "newFile": "Neue Datei",
+    "quickAccess": "Schnellzugriff",
+    "activityOverview": "Aktivitätsübersicht",
+    "portfolioOverview": "Portfolio Übersicht",
+    "dataOverview": "Datenübersicht",
+    "sections": "Sektionen",
+    "totalEntries": "Gesamte Einträge",
+    "taxRelevant": "Steuerrelevant",
+    "status": "Status",
+    "ready": "Bereit",
+    "complete": "Vollständig",
+    "active": "Aktiv",
+    "analyzed": "Analysiert",
+    "kapExport": "KAP-Export",
+    "structured": "Strukturiert"
+  },
+  "upload": {
+    "title": "Willkommen bei Broker Analyzer",
+    "description": "Laden Sie Ihre CSV-Datei hoch, um mit der professionellen Analyse Ihrer Broker-Daten zu beginnen",
+    "features": {
+      "analysis": {
+        "title": "Automatische Analyse",
+        "description": "Ihre CSV-Datei wird automatisch analysiert und strukturiert"
+      },
+      "optimization": {
+        "title": "Steueroptimierung",
+        "description": "Bereiten Sie Ihre KAP-Formulardaten optimal vor"
+      },
+      "security": {
+        "title": "Sichere Verarbeitung",
+        "description": "Alle Daten werden lokal verarbeitet und nicht gespeichert"
+      }
+    },
+    "supportedFormats": "Unterstützte Formate: CSV-Dateien von Interactive Brokers, Comdirect und anderen gängigen Brokern",
+    "dragDrop": "CSV-Datei hier hineinziehen oder klicken zum Auswählen",
+    "selectFile": "Datei auswählen",
+    "uploading": "Hochladen...",
+    "success": "Datei erfolgreich hochgeladen!",
+    "error": "Fehler beim Hochladen der Datei"
+  },
+  "tax": {
+    "title": "Steueranalyse",
+    "description": "Erstellen Sie steuerrelevante Daten für Ihre deutsche Steuererklärung",
+    "year": "Steuerjahr",
+    "selectYear": "Steuerjahr auswählen",
+    "capitalGains": "Kapitalerträge",
+    "dividends": "Dividenden",
+    "foreignTaxes": "Ausländische Steuern",
+    "summary": "Steuer-Zusammenfassung",
+    "export": "Daten exportieren",
+    "noData": "Keine Steuerdaten für das ausgewählte Jahr verfügbar",
+    "totalGains": "Gesamtgewinne",
+    "totalLosses": "Gesamtverluste",
+    "netGains": "Nettogewinne",
+    "totalDividends": "Gesamtdividenden",
+    "withholdingTax": "Quellensteuer",
+    "transactions": "Transaktionen"
+  },
+  "explorer": {
+    "title": "Datenexplorer",
+    "description": "Durchsuchen und analysieren Sie alle verfügbaren Datensektionen",
+    "search": "Suche nach Sektionen oder Spalten...",
+    "categories": {
+      "all": "Alle Sektionen",
+      "trades": "Handel",
+      "dividends": "Dividenden",
+      "performance": "Performance",
+      "cash": "Liquidität",
+      "other": "Sonstige"
+    },
+    "sectionsFound": "Sektionen gefunden",
+    "openAll": "Alle öffnen",
+    "closeAll": "Alle schließen",
+    "noSections": "Keine Sektionen gefunden",
+    "tryDifferent": "Versuchen Sie es mit anderen Suchbegriffen oder Kategorien",
+    "entries": "Einträge",
+    "columns": "Spalten",
+    "exportCsv": "Als CSV exportieren"
+  },
+  "help": {
+    "title": "Codes & Hilfe",
+    "description": "Nachschlagewerk für Transaktionscodes und Anwendungshilfe",
+    "search": "Suche nach Codes oder Beschreibungen...",
+    "tabs": {
+      "transactionCodes": "Transaktionscodes",
+      "assetCategories": "Asset-Kategorien",
+      "applicationHelp": "Anwendungshilfe"
+    },
+    "transactionCodesInfo": "Diese Codes werden von Brokern verwendet, um verschiedene Transaktionstypen zu identifizieren.",
+    "assetCategoriesInfo": "Asset-Kategorien klassifizieren die verschiedenen Arten von Finanzinstrumenten.",
+    "categories": {
+      "trading": "Handel",
+      "income": "Einkommen",
+      "costs": "Kosten",
+      "other": "Sonstige"
+    },
+    "assetTypes": {
+      "stock": "Aktie",
+      "option": "Option",
+      "future": "Future",
+      "bond": "Anleihe",
+      "etf": "ETF",
+      "fund": "Fonds",
+      "cash": "Bargeld",
+      "forex": "Forex"
+    },
+    "assetDetails": {
+      "stock": "Einzelne Unternehmensanteile",
+      "option": "Optionskontrakte auf Basiswerte",
+      "future": "Futures-Kontrakte",
+      "bond": "Staats- und Unternehmensanleihen",
+      "etf": "Exchange Traded Funds",
+      "fund": "Investmentfonds",
+      "cash": "Liquidität und Geldmarktinstrumente",
+      "forex": "Devisentransaktionen"
+    },
+    "sections": {
+      "csvUpload": {
+        "title": "CSV-Datei Upload",
+        "content": [
+          "Unterstützte Formate: CSV-Dateien von Interactive Brokers, Comdirect und anderen Brokern",
+          "Maximale Dateigröße: 50 MB",
+          "Die Datei wird automatisch analysiert und in Sektionen aufgeteilt",
+          "Alle Daten werden lokal verarbeitet und nicht dauerhaft gespeichert"
+        ]
+      },
+      "taxAnalysis": {
+        "title": "Steueranalyse (KAP-Formular)",
+        "content": [
+          "Automatische Berechnung von Kapitalgewinnen und -verlusten",
+          "FIFO-Methode für die Zuordnung von Käufen und Verkäufen",
+          "Erfassung von Dividenden und ausländischen Quellensteuern",
+          "Exportfertige Daten für die Steuererklärung",
+          "Unterscheidung zwischen kurz- und langfristigen Kapitalgewinnen"
+        ]
+      },
+      "dataProcessing": {
+        "title": "Datenverarbeitung",
+        "content": [
+          "Flexibler CSV-Parser für verschiedene Broker-Formate",
+          "Automatische Erkennung von Transaktionstypen",
+          "Währungsumrechnung und Kostenberechnung",
+          "Gruppierung verwandter Transaktionen",
+          "Validierung und Bereinigung der Eingabedaten"
+        ]
+      },
+      "dataExplorer": {
+        "title": "Datenexplorer",
+        "content": [
+          "Strukturierte Ansicht aller verfügbaren Datensektionen",
+          "Such- und Filterfunktionen für spezifische Daten",
+          "Exportoptionen für einzelne Sektionen",
+          "Detailansichten für Trades, Dividenden und andere Transaktionen",
+          "Übersichtliche Kategorisierung nach Datentypen"
+        ]
+      }
+    }
+  },
+  "options": {
+    "title": "Optionen Rentabilitätsrechner",
+    "description": "Berechnen Sie die Rentabilität des Kaufs oder Verkaufs von Aktienoptionen",
+    "tabs": {
+      "calculator": "Rechner",
+      "scenarios": "Szenarien",
+      "analysis": "Analyse"
+    },
+    "optionType": "Optionstyp",
+    "call": "Call Option",
+    "put": "Put Option",
+    "strategy": "Strategie",
+    "buy": "Option kaufen",
+    "sell": "Option verkaufen",
+    "stockPrice": "Aktueller Aktienkurs",
+    "strikePrice": "Strike-Preis",
+    "premium": "Optionsprämie",
+    "expiration": "Tage bis Verfall",
+    "volatility": "Implizite Volatilität (%)",
+    "riskFreeRate": "Risikofreier Zinssatz (%)",
+    "calculate": "Berechnen",
+    "results": "Ergebnisse",
+    "profitLoss": "Gewinn/Verlust",
+    "breakeven": "Break-Even-Punkt",
+    "maxProfit": "Maximaler Gewinn",
+    "maxLoss": "Maximaler Verlust",
+    "probability": "Gewinnwahrscheinlichkeit",
+    "greeks": "Options-Griechen",
+    "delta": "Delta",
+    "gamma": "Gamma",
+    "theta": "Theta",
+    "vega": "Vega",
+    "rho": "Rho",
+    "scenarios": "Preis-Szenarien",
+    "currentPrice": "Aktueller Preis",
+    "targetPrice": "Zielpreis",
+    "timeDecay": "Zeitwertverfall-Effekt",
+    "volatilityImpact": "Volatilitäts-Einfluss",
+    "profitProbability": "Gewinnwahrscheinlichkeit",
+    "riskReturn": "Risiko/Rendite-Analyse",
+    "recommendation": "Empfehlung",
+    "inputValidation": {
+      "stockPriceRequired": "Aktienkurs ist erforderlich",
+      "strikePriceRequired": "Strike-Preis ist erforderlich",
+      "premiumRequired": "Optionsprämie ist erforderlich",
+      "invalidNumber": "Bitte geben Sie eine gültige Zahl ein",
+      "negativeValue": "Wert kann nicht negativ sein"
+    }
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "view": "Anzeigen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Vorherige",
+    "close": "Schließen",
+    "open": "Öffnen",
+    "refresh": "Aktualisieren",
+    "search": "Suchen",
+    "filter": "Filter",
+    "export": "Exportieren",
+    "import": "Importieren",
+    "download": "Herunterladen",
+    "upload": "Hochladen",
+    "language": "Sprache"
+  },
+  "table": {
+    "symbol": "Symbol",
+    "description": "Beschreibung",
+    "quantity": "Menge",
+    "price": "Preis",
+    "amount": "Betrag",
+    "currency": "Währung",
+    "date": "Datum",
+    "type": "Typ",
+    "category": "Kategorie",
+    "commission": "Kommission",
+    "code": "Code",
+    "noData": "Keine Daten verfügbar"
+  }
+}
+
