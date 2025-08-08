@@ -1,46 +1,32 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {
+  Alert,
+  alpha,
   Box,
   Card,
-  CardContent,
-  Typography,
-  Grid,
-  TextField,
   FormControl,
-  FormLabel,
-  RadioGroup,
   FormControlLabel,
-  Radio,
-  Button,
-  Tabs,
-  Tab,
+  FormLabel,
+  Grid,
+  LinearProgress,
   Paper,
+  Radio,
+  RadioGroup,
+  Stack,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Chip,
-  Alert,
-  useTheme,
-  alpha,
-  Stack,
-  Divider,
-  Avatar,
-  LinearProgress
+  Tabs,
+  TextField,
+  Typography,
+  useTheme
 } from '@mui/material';
-import {
-  Calculate,
-  TrendingUp,
-  TrendingDown,
-  Timeline,
-  Assessment,
-  Functions,
-  Warning,
-  CheckCircle
-} from '@mui/icons-material';
-import { useTranslation } from 'react-i18next';
+import {Assessment, Calculate, CheckCircle, Functions, Timeline, Warning} from '@mui/icons-material';
+import {useTranslation} from 'react-i18next';
 
 interface OptionInputs {
   stockPrice: number;
@@ -74,7 +60,7 @@ interface TabPanelProps {
   value: number;
 }
 
-function TabPanel(props: TabPanelProps) {
+function TabPanel(props: Readonly<TabPanelProps>) {
   const { children, value, index, ...other } = props;
   return (
     <div
@@ -197,7 +183,7 @@ const OptionsCalculator: React.FC = () => {
     }
 
     // Simple probability estimation
-    const profitProbability = optionType === 'call' 
+    const profitProbability = optionType === 'call'
       ? (strategy === 'buy' ? normalCDF((Math.log(stockPrice / breakeven)) / (sigma * Math.sqrt(T))) : 1 - normalCDF((Math.log(stockPrice / breakeven)) / (sigma * Math.sqrt(T))))
       : (strategy === 'buy' ? normalCDF((Math.log(breakeven / stockPrice)) / (sigma * Math.sqrt(T))) : 1 - normalCDF((Math.log(breakeven / stockPrice)) / (sigma * Math.sqrt(T))));
 
@@ -217,23 +203,6 @@ const OptionsCalculator: React.FC = () => {
     };
   }, [inputs, blackScholes]);
 
-  const validateInputs = useCallback((): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!inputs.stockPrice || inputs.stockPrice <= 0) {
-      newErrors.stockPrice = t('options.inputValidation.stockPriceRequired');
-    }
-    if (!inputs.strikePrice || inputs.strikePrice <= 0) {
-      newErrors.strikePrice = t('options.inputValidation.strikePriceRequired');
-    }
-    if (!inputs.premium || inputs.premium <= 0) {
-      newErrors.premium = t('options.inputValidation.premiumRequired');
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  }, [inputs, t]);
-
   const handleInputChange = (field: keyof OptionInputs, value: string | number) => {
     setInputs(prev => ({ ...prev, [field]: value }));
     if (errors[field]) {
@@ -248,22 +217,22 @@ const OptionsCalculator: React.FC = () => {
     const profitLoss = result.profitLoss;
 
     if (profitLoss > 0) {
-      return { 
-        text: 'Profitable at current price', 
-        color: theme.palette.success.main, 
-        icon: <CheckCircle /> 
+      return {
+        text: 'Profitable at current price',
+        color: theme.palette.success.main,
+        icon: <CheckCircle />
       };
     } else if (profitLoss > -result.maxLoss * 0.5) {
-      return { 
-        text: 'Moderate risk position', 
-        color: theme.palette.warning.main, 
-        icon: <Warning /> 
+      return {
+        text: 'Moderate risk position',
+        color: theme.palette.warning.main,
+        icon: <Warning />
       };
     } else {
-      return { 
-        text: 'High risk position', 
-        color: theme.palette.error.main, 
-        icon: <Warning /> 
+      return {
+        text: 'High risk position',
+        color: theme.palette.error.main,
+        icon: <Warning />
       };
     }
   };
