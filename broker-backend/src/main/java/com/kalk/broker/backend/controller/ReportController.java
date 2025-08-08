@@ -3,10 +3,9 @@ package com.kalk.broker.backend.controller;
 import com.kalk.broker.backend.config.AppConstants;
 import com.kalk.broker.backend.csv.FileImporter;
 import com.kalk.broker.backend.exception.FileProcessingException;
-import com.kalk.broker.backend.pojo.Report;
-import com.kalk.broker.backend.pojo.SectionData;
-import com.kalk.broker.backend.pojo.TaxRelevantData;
-import com.kalk.broker.backend.service.TaxRelevantDataService;
+import com.kalk.broker.backend.pojo.*;
+import com.kalk.broker.backend.service.TaxDataService;
+import com.kalk.broker.backend.service.PortfolioDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,14 +28,16 @@ public class ReportController {
     private static final Logger logger = LoggerFactory.getLogger(ReportController.class);
 
     private final FileImporter fileImporter;
-    private final TaxRelevantDataService taxRelevantDataService;
+    private final TaxDataService taxRelevantDataService;
+    private final PortfolioDataService portfolioDataService;
 
     private String currentFileName = AppConstants.DEFAULT_FILE_NAME;
 
     @Autowired
-    public ReportController(FileImporter fileImporter, TaxRelevantDataService taxRelevantDataService) {
+    public ReportController(FileImporter fileImporter, TaxDataService taxRelevantDataService, PortfolioDataService portfolioDataService) {
         this.fileImporter = fileImporter;
         this.taxRelevantDataService = taxRelevantDataService;
+        this.portfolioDataService = portfolioDataService;
     }
 
     @PostMapping("/upload")
@@ -221,6 +224,123 @@ public class ReportController {
             .orElse(ResponseEntity.notFound().build());
     }
 
+    // === PORTFOLIO DATA ENDPOINTS ===
+
+    /**
+     * Erstellt und gibt das vollständige Portfolio zurück
+     */
+    @GetMapping("/portfolio")
+    public ResponseEntity<Portfolio> getPortfolio() {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                Portfolio portfolio = portfolioDataService.createPortfolio(report);
+                return ResponseEntity.ok(portfolio);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt nur die Positionen des Portfolios zurück
+     */
+    @GetMapping("/portfolio/positions")
+    public ResponseEntity<List<Position>> getPositions() {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                Portfolio portfolio = portfolioDataService.createPortfolio(report);
+                return ResponseEntity.ok(portfolio.getPositions());
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt eine spezifische Position zurück
+     */
+    @GetMapping("/portfolio/positions/{symbol}")
+    public ResponseEntity<Position> getPosition(@PathVariable String symbol) {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                Portfolio portfolio = portfolioDataService.createPortfolio(report);
+                return portfolio.getPositions().stream()
+                    .filter(pos -> symbol.equals(pos.getSymbol()))
+                    .findFirst()
+                    .map(ResponseEntity::ok)
+                    .orElse(ResponseEntity.notFound().build());
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt alle Transaktionen für eine bestimmte Position zurück
+     */
+    @GetMapping("/portfolio/positions/{symbol}/transactions")
+    public ResponseEntity<List<Transaction>> getPositionTransactions(@PathVariable String symbol) {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                Portfolio portfolio = portfolioDataService.createPortfolio(report);
+                return portfolio.getPositions().stream()
+                    .filter(pos -> symbol.equals(pos.getSymbol()))
+                    .findFirst()
+                    .map(pos -> ResponseEntity.ok(pos.getTransactions()))
+                    .orElse(ResponseEntity.notFound().build());
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt alle Dividenden für eine bestimmte Position zurück
+     */
+    @GetMapping("/portfolio/positions/{symbol}/dividends")
+    public ResponseEntity<List<Dividend>> getPositionDividends(@PathVariable String symbol) {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                Portfolio portfolio = portfolioDataService.createPortfolio(report);
+                return portfolio.getPositions().stream()
+                    .filter(pos -> symbol.equals(pos.getSymbol()))
+                    .findFirst()
+                    .map(pos -> ResponseEntity.ok(pos.getDividends()))
+                    .orElse(ResponseEntity.notFound().build());
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt eine Portfolio-Übersicht mit Summen zurück
+     */
+    @GetMapping("/portfolio/summary")
+    public ResponseEntity<PortfolioSummary> getPortfolioSummary() {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                Portfolio portfolio = portfolioDataService.createPortfolio(report);
+                PortfolioSummary summary = createPortfolioSummary(portfolio);
+                return ResponseEntity.ok(summary);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
     // === PRIVATE HELPER METHODS ===
 
     private void validateFile(MultipartFile file) {
@@ -271,6 +391,19 @@ public class ReportController {
             .sum();
         summary.setTotalDataRows(totalDataRows);
 
+        return summary;
+    }
+
+    private PortfolioSummary createPortfolioSummary(Portfolio portfolio) {
+        PortfolioSummary summary = new PortfolioSummary();
+        summary.setTotalPositions(portfolio.getPositions().size());
+        summary.setTotalMarketValue(portfolio.getTotalMarketValue());
+        summary.setTotalUnrealizedPnL(portfolio.getTotalUnrealizedPnL());
+        summary.setTotalRealizedPnL(portfolio.getTotalRealizedPnL());
+        summary.setTotalDividends(portfolio.getTotalDividends());
+        summary.setAccountId(portfolio.getAccountId());
+        summary.setReportDate(portfolio.getReportDate());
+        summary.setBaseCurrency(portfolio.getBaseCurrency());
         return summary;
     }
 
@@ -330,5 +463,42 @@ public class ReportController {
 
         public String getFileName() { return fileName; }
         public void setFileName(String fileName) { this.fileName = fileName; }
+    }
+
+    // DTO für Portfolio Summary
+    public static class PortfolioSummary {
+        private int totalPositions;
+        private BigDecimal totalMarketValue;
+        private BigDecimal totalUnrealizedPnL;
+        private BigDecimal totalRealizedPnL;
+        private BigDecimal totalDividends;
+        private String accountId;
+        private LocalDateTime reportDate;
+        private String baseCurrency;
+
+        // Getters and Setters
+        public int getTotalPositions() { return totalPositions; }
+        public void setTotalPositions(int totalPositions) { this.totalPositions = totalPositions; }
+
+        public BigDecimal getTotalMarketValue() { return totalMarketValue; }
+        public void setTotalMarketValue(BigDecimal totalMarketValue) { this.totalMarketValue = totalMarketValue; }
+
+        public BigDecimal getTotalUnrealizedPnL() { return totalUnrealizedPnL; }
+        public void setTotalUnrealizedPnL(BigDecimal totalUnrealizedPnL) { this.totalUnrealizedPnL = totalUnrealizedPnL; }
+
+        public BigDecimal getTotalRealizedPnL() { return totalRealizedPnL; }
+        public void setTotalRealizedPnL(BigDecimal totalRealizedPnL) { this.totalRealizedPnL = totalRealizedPnL; }
+
+        public BigDecimal getTotalDividends() { return totalDividends; }
+        public void setTotalDividends(BigDecimal totalDividends) { this.totalDividends = totalDividends; }
+
+        public String getAccountId() { return accountId; }
+        public void setAccountId(String accountId) { this.accountId = accountId; }
+
+        public LocalDateTime getReportDate() { return reportDate; }
+        public void setReportDate(LocalDateTime reportDate) { this.reportDate = reportDate; }
+
+        public String getBaseCurrency() { return baseCurrency; }
+        public void setBaseCurrency(String baseCurrency) { this.baseCurrency = baseCurrency; }
     }
 }

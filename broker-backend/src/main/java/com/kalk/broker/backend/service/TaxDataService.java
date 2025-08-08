@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class TaxRelevantDataService {
+public class TaxDataService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TaxRelevantDataService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TaxDataService.class);
 
     // Transaction code mappings for better descriptions
     private static final Map<String, String> TRANSACTION_CODES = new HashMap<>();
