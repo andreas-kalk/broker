@@ -1,262 +1,262 @@
 {
-  "nav": {
-    "dashboard": "Dashboard",
-    "taxAnalysis": "Tax Analysis",
-    "dataExplorer": "Data Explorer",
-    "help": "Codes & Help",
-    "optionsCalculator": "Options Calculator",
-    "brandName": "Broker Analyzer"
-  },
-  "dashboard": {
-    "title": "Portfolio Dashboard",
-    "currentFile": "Current file",
-    "noFileUploaded": "No CSV file uploaded",
-    "noFileDescription": "Upload a CSV file to start analyzing your broker data.",
-    "uploadFile": "Upload CSV File",
-    "refreshData": "Refresh data",
-    "newFile": "New File",
-    "quickAccess": "Quick Access",
-    "activityOverview": "Activity Overview",
-    "portfolioOverview": "Portfolio Overview",
-    "dataOverview": "Data Overview",
-    "sections": "Sections",
-    "totalEntries": "Total Entries",
-    "taxRelevant": "Tax Relevant",
-    "status": "Status",
-    "ready": "Ready",
-    "complete": "Complete",
-    "active": "Active",
-    "analyzed": "Analyzed",
-    "kapExport": "KAP Export",
-    "structured": "Structured"
-  },
-  "upload": {
-    "title": "Welcome to Broker Analyzer",
-    "description": "Upload your CSV file to start professional analysis of your broker data",
-    "features": {
-      "analysis": {
-        "title": "Automatic Analysis",
-        "description": "Your CSV file is automatically analyzed and structured"
-      },
-      "optimization": {
-        "title": "Tax Optimization",
-        "description": "Optimally prepare your KAP form data"
-      },
-      "security": {
-        "title": "Secure Processing",
-        "description": "All data is processed locally and not stored"
-      }
+    "nav": {
+        "dashboard": "Dashboard",
+        "taxAnalysis": "Tax Analysis",
+        "dataExplorer": "Data Explorer",
+        "help": "Codes & Help",
+        "optionsCalculator": "Options Calculator",
+        "brandName": "Broker Analyzer"
     },
-    "supportedFormats": "Supported formats: CSV files from Interactive Brokers, Comdirect, and other common brokers",
-    "dragDrop": "Drag and drop your CSV file here, or click to select",
-    "selectFile": "Select File",
-    "uploading": "Uploading...",
-    "success": "File uploaded successfully!",
-    "error": "Error uploading file"
-  },
-  "tax": {
-    "title": "Tax Analysis",
-    "description": "Generate tax-relevant data for your German tax return",
-    "year": "Tax Year",
-    "selectYear": "Select tax year",
-    "capitalGains": "Capital Gains",
-    "dividends": "Dividends",
-    "foreignTaxes": "Foreign Taxes",
-    "summary": "Tax Summary",
-    "export": "Export Data",
-    "noData": "No tax data available for the selected year",
-    "totalGains": "Total Gains",
-    "totalLosses": "Total Losses",
-    "netGains": "Net Gains",
-    "totalDividends": "Total Dividends",
-    "withholdingTax": "Withholding Tax",
-    "transactions": "Transactions"
-  },
-  "explorer": {
-    "title": "Data Explorer",
-    "description": "Browse and analyze all available data sections",
-    "search": "Search sections or columns...",
-    "categories": {
-      "all": "All Sections",
-      "trades": "Trading",
-      "dividends": "Dividends",
-      "performance": "Performance",
-      "cash": "Liquidity",
-      "other": "Other"
+    "dashboard": {
+        "title": "Portfolio Dashboard",
+        "currentFile": "Current file",
+        "noFileUploaded": "No CSV file uploaded",
+        "noFileDescription": "Upload a CSV file to start analyzing your broker data.",
+        "uploadFile": "Upload CSV File",
+        "refreshData": "Refresh data",
+        "newFile": "New File",
+        "quickAccess": "Quick Access",
+        "activityOverview": "Activity Overview",
+        "portfolioOverview": "Portfolio Overview",
+        "dataOverview": "Data Overview",
+        "sections": "Sections",
+        "totalEntries": "Total Entries",
+        "taxRelevant": "Tax Relevant",
+        "status": "Status",
+        "ready": "Ready",
+        "complete": "Complete",
+        "active": "Active",
+        "analyzed": "Analyzed",
+        "kapExport": "KAP Export",
+        "structured": "Structured"
     },
-    "sectionsFound": "sections found",
-    "openAll": "Open All",
-    "closeAll": "Close All",
-    "noSections": "No sections found",
-    "tryDifferent": "Try different search terms or categories",
-    "entries": "entries",
-    "columns": "columns",
-    "exportCsv": "Export as CSV"
-  },
-  "help": {
-    "title": "Codes & Help",
-    "description": "Reference guide for transaction codes and application help",
-    "search": "Search codes or descriptions...",
-    "tabs": {
-      "transactionCodes": "Transaction Codes",
-      "assetCategories": "Asset Categories",
-      "applicationHelp": "Application Help"
+    "upload": {
+        "title": "Welcome to Broker Analyzer",
+        "description": "Upload your CSV file to start professional analysis of your broker data",
+        "features": {
+            "analysis": {
+                "title": "Automatic Analysis",
+                "description": "Your CSV file is automatically analyzed and structured"
+            },
+            "optimization": {
+                "title": "Tax Optimization",
+                "description": "Optimally prepare your KAP form data"
+            },
+            "security": {
+                "title": "Secure Processing",
+                "description": "All data is processed locally and not stored"
+            }
+        },
+        "supportedFormats": "Supported formats: CSV files from Interactive Brokers, Comdirect, and other common brokers",
+        "dragDrop": "Drag and drop your CSV file here, or click to select",
+        "selectFile": "Select File",
+        "uploading": "Uploading...",
+        "success": "File uploaded successfully!",
+        "error": "Error uploading file"
     },
-    "transactionCodesInfo": "These codes are used by brokers to identify different transaction types.",
-    "assetCategoriesInfo": "Asset categories classify the different types of financial instruments.",
-    "categories": {
-      "trading": "Trading",
-      "income": "Income",
-      "costs": "Costs",
-      "other": "Other"
+    "tax": {
+        "title": "Tax Analysis",
+        "description": "Generate tax-relevant data for your German tax return",
+        "year": "Tax Year",
+        "selectYear": "Select tax year",
+        "capitalGains": "Capital Gains",
+        "dividends": "Dividends",
+        "foreignTaxes": "Foreign Taxes",
+        "summary": "Tax Summary",
+        "export": "Export Data",
+        "noData": "No tax data available for the selected year",
+        "totalGains": "Total Gains",
+        "totalLosses": "Total Losses",
+        "netGains": "Net Gains",
+        "totalDividends": "Total Dividends",
+        "withholdingTax": "Withholding Tax",
+        "transactions": "Transactions"
     },
-    "assetTypes": {
-      "stock": "Stock",
-      "option": "Option",
-      "future": "Future",
-      "bond": "Bond",
-      "etf": "ETF",
-      "fund": "Fund",
-      "cash": "Cash",
-      "forex": "Forex"
-    },
-    "assetDetails": {
-      "stock": "Individual company shares",
-      "option": "Option contracts on underlying assets",
-      "future": "Futures contracts",
-      "bond": "Government and corporate bonds",
-      "etf": "Exchange Traded Funds",
-      "fund": "Investment funds",
-      "cash": "Liquidity and money market instruments",
-      "forex": "Foreign exchange transactions"
-    },
-    "sections": {
-      "csvUpload": {
-        "title": "CSV File Upload",
-        "content": [
-          "Supported formats: CSV files from Interactive Brokers, Comdirect and other brokers",
-          "Maximum file size: 50 MB",
-          "The file is automatically analyzed and divided into sections",
-          "All data is processed locally and not permanently stored"
-        ]
-      },
-      "taxAnalysis": {
-        "title": "Tax Analysis (KAP Form)",
-        "content": [
-          "Automatic calculation of capital gains and losses",
-          "FIFO method for matching purchases and sales",
-          "Recording of dividends and foreign withholding taxes",
-          "Export-ready data for tax returns",
-          "Distinction between short and long-term capital gains"
-        ]
-      },
-      "dataProcessing": {
-        "title": "Data Processing",
-        "content": [
-          "Flexible CSV parser for different broker formats",
-          "Automatic recognition of transaction types",
-          "Currency conversion and cost calculation",
-          "Grouping of related transactions",
-          "Validation and cleaning of input data"
-        ]
-      },
-      "dataExplorer": {
+    "explorer": {
         "title": "Data Explorer",
-        "content": [
-          "Structured view of all available data sections",
-          "Search and filter functions for specific data",
-          "Export options for individual sections",
-          "Detailed views for trades, dividends and other transactions",
-          "Clear categorization by data types"
-        ]
-      }
-    }
-  },
-  "options": {
-    "title": "Options Profitability Calculator",
-    "description": "Calculate the profitability of buying or selling stock options",
-    "tabs": {
-      "calculator": "Calculator",
-      "scenarios": "Scenarios",
-      "analysis": "Analysis"
+        "description": "Browse and analyze all available data sections",
+        "search": "Search sections or columns...",
+        "categories": {
+            "all": "All Sections",
+            "trades": "Trading",
+            "dividends": "Dividends",
+            "performance": "Performance",
+            "cash": "Liquidity",
+            "other": "Other"
+        },
+        "sectionsFound": "sections found",
+        "openAll": "Open All",
+        "closeAll": "Close All",
+        "noSections": "No sections found",
+        "tryDifferent": "Try different search terms or categories",
+        "entries": "entries",
+        "columns": "columns",
+        "exportCsv": "Export as CSV"
     },
-    "optionType": "Option Type",
-    "call": "Call Option",
-    "put": "Put Option",
-    "strategy": "Strategy",
-    "buy": "Buy Option",
-    "sell": "Sell Option",
-    "stockPrice": "Current Stock Price",
-    "strikePrice": "Strike Price",
-    "premium": "Option Premium",
-    "expiration": "Days to Expiration",
-    "volatility": "Implied Volatility (%)",
-    "riskFreeRate": "Risk-Free Rate (%)",
-    "calculate": "Calculate",
-    "results": "Results",
-    "profitLoss": "Profit/Loss",
-    "breakeven": "Breakeven Point",
-    "maxProfit": "Maximum Profit",
-    "maxLoss": "Maximum Loss",
-    "probability": "Probability of Profit",
-    "greeks": "Option Greeks",
-    "delta": "Delta",
-    "gamma": "Gamma",
-    "theta": "Theta",
-    "vega": "Vega",
-    "rho": "Rho",
-    "scenarios": "Price Scenarios",
-    "currentPrice": "Current Price",
-    "targetPrice": "Target Price",
-    "timeDecay": "Time Decay Effect",
-    "volatilityImpact": "Volatility Impact",
-    "profitProbability": "Profit Probability",
-    "riskReturn": "Risk/Return Analysis",
-    "recommendation": "Recommendation",
-    "inputValidation": {
-      "stockPriceRequired": "Stock price is required",
-      "strikePriceRequired": "Strike price is required",
-      "premiumRequired": "Option premium is required",
-      "invalidNumber": "Please enter a valid number",
-      "negativeValue": "Value cannot be negative"
+    "help": {
+        "title": "Codes & Help",
+        "description": "Reference guide for transaction codes and application help",
+        "search": "Search codes or descriptions...",
+        "tabs": {
+            "transactionCodes": "Transaction Codes",
+            "assetCategories": "Asset Categories",
+            "applicationHelp": "Application Help"
+        },
+        "transactionCodesInfo": "These codes are used by brokers to identify different transaction types.",
+        "assetCategoriesInfo": "Asset categories classify the different types of financial instruments.",
+        "categories": {
+            "trading": "Trading",
+            "income": "Income",
+            "costs": "Costs",
+            "other": "Other"
+        },
+        "assetTypes": {
+            "stock": "Stock",
+            "option": "Option",
+            "future": "Future",
+            "bond": "Bond",
+            "etf": "ETF",
+            "fund": "Fund",
+            "cash": "Cash",
+            "forex": "Forex"
+        },
+        "assetDetails": {
+            "stock": "Individual company shares",
+            "option": "Option contracts on underlying assets",
+            "future": "Futures contracts",
+            "bond": "Government and corporate bonds",
+            "etf": "Exchange Traded Funds",
+            "fund": "Investment funds",
+            "cash": "Liquidity and money market instruments",
+            "forex": "Foreign exchange transactions"
+        },
+        "sections": {
+            "csvUpload": {
+                "title": "CSV File Upload",
+                "content": [
+                    "Supported formats: CSV files from Interactive Brokers, Comdirect and other brokers",
+                    "Maximum file size: 50 MB",
+                    "The file is automatically analyzed and divided into sections",
+                    "All data is processed locally and not permanently stored"
+                ]
+            },
+            "taxAnalysis": {
+                "title": "Tax Analysis (KAP Form)",
+                "content": [
+                    "Automatic calculation of capital gains and losses",
+                    "FIFO method for matching purchases and sales",
+                    "Recording of dividends and foreign withholding taxes",
+                    "Export-ready data for tax returns",
+                    "Distinction between short and long-term capital gains"
+                ]
+            },
+            "dataProcessing": {
+                "title": "Data Processing",
+                "content": [
+                    "Flexible CSV parser for different broker formats",
+                    "Automatic recognition of transaction types",
+                    "Currency conversion and cost calculation",
+                    "Grouping of related transactions",
+                    "Validation and cleaning of input data"
+                ]
+            },
+            "dataExplorer": {
+                "title": "Data Explorer",
+                "content": [
+                    "Structured view of all available data sections",
+                    "Search and filter functions for specific data",
+                    "Export options for individual sections",
+                    "Detailed views for trades, dividends and other transactions",
+                    "Clear categorization by data types"
+                ]
+            }
+        }
+    },
+    "options": {
+        "title": "Options Profitability Calculator",
+        "description": "Calculate the profitability of buying or selling stock options",
+        "tabs": {
+            "calculator": "Calculator",
+            "scenarios": "Scenarios",
+            "analysis": "Analysis"
+        },
+        "optionType": "Option Type",
+        "call": "Call Option",
+        "put": "Put Option",
+        "strategy": "Strategy",
+        "buy": "Buy Option",
+        "sell": "Sell Option",
+        "stockPrice": "Current Stock Price",
+        "strikePrice": "Strike Price",
+        "premium": "Option Premium",
+        "expiration": "Days to Expiration",
+        "volatility": "Implied Volatility (%)",
+        "riskFreeRate": "Risk-Free Rate (%)",
+        "calculate": "Calculate",
+        "results": "Results",
+        "profitLoss": "Profit/Loss",
+        "breakeven": "Breakeven Point",
+        "maxProfit": "Maximum Profit",
+        "maxLoss": "Maximum Loss",
+        "probability": "Probability of Profit",
+        "greeks": "Option Greeks",
+        "delta": "Delta",
+        "gamma": "Gamma",
+        "theta": "Theta",
+        "vega": "Vega",
+        "rho": "Rho",
+        "scenarios": "Price Scenarios",
+        "currentPrice": "Current Price",
+        "targetPrice": "Target Price",
+        "timeDecay": "Time Decay Effect",
+        "volatilityImpact": "Volatility Impact",
+        "profitProbability": "Profit Probability",
+        "riskReturn": "Risk/Return Analysis",
+        "recommendation": "Recommendation",
+        "inputValidation": {
+            "stockPriceRequired": "Stock price is required",
+            "strikePriceRequired": "Strike price is required",
+            "premiumRequired": "Option premium is required",
+            "invalidNumber": "Please enter a valid number",
+            "negativeValue": "Value cannot be negative"
+        }
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "Error",
+        "success": "Success",
+        "cancel": "Cancel",
+        "save": "Save",
+        "delete": "Delete",
+        "edit": "Edit",
+        "view": "View",
+        "back": "Back",
+        "next": "Next",
+        "previous": "Previous",
+        "close": "Close",
+        "open": "Open",
+        "refresh": "Refresh",
+        "search": "Search",
+        "filter": "Filter",
+        "export": "Export",
+        "import": "Import",
+        "download": "Download",
+        "upload": "Upload",
+        "language": "Language"
+    },
+    "table": {
+        "symbol": "Symbol",
+        "description": "Description",
+        "quantity": "Quantity",
+        "price": "Price",
+        "amount": "Amount",
+        "currency": "Currency",
+        "date": "Date",
+        "type": "Type",
+        "category": "Category",
+        "commission": "Commission",
+        "code": "Code",
+        "noData": "No data available"
     }
-  },
-  "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "delete": "Delete",
-    "edit": "Edit",
-    "view": "View",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "close": "Close",
-    "open": "Open",
-    "refresh": "Refresh",
-    "search": "Search",
-    "filter": "Filter",
-    "export": "Export",
-    "import": "Import",
-    "download": "Download",
-    "upload": "Upload",
-    "language": "Language"
-  },
-  "table": {
-    "symbol": "Symbol",
-    "description": "Description",
-    "quantity": "Quantity",
-    "price": "Price",
-    "amount": "Amount",
-    "currency": "Currency",
-    "date": "Date",
-    "type": "Type",
-    "category": "Category",
-    "commission": "Commission",
-    "code": "Code",
-    "noData": "No data available"
-  }
 }
 
