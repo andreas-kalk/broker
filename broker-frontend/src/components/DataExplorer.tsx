@@ -1,50 +1,38 @@
-import React, { useState, useMemo } from 'react';
+import React, {useMemo, useState} from 'react';
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  alpha,
+  Avatar,
   Box,
-  Grid,
+  Button,
   Card,
   CardContent,
-  Typography,
-  TextField,
-  InputAdornment,
   Chip,
-  Avatar,
-  Button,
-  Stack,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  useTheme,
-  alpha,
-  Tabs,
-  Tab,
+  Grid,
   IconButton,
-  Tooltip
+  InputAdornment,
+  Stack,
+  Tab,
+  Tabs,
+  TextField,
+  Tooltip,
+  Typography,
+  useTheme
 } from '@mui/material';
-import {
-  Search,
-  FilterList,
-  ExpandMore,
-  Visibility,
-  GetApp,
-  TableChart,
-  Timeline,
-  Euro,
-  ShowChart,
-  AccountBalance,
-  Assessment
-} from '@mui/icons-material';
-import { useSearchParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { useReportData } from '../hooks/useReportData';
+import {AccountBalance, Assessment, Euro, ExpandMore, GetApp, Search, ShowChart, TableChart, Timeline, Visibility} from '@mui/icons-material';
+import {useSearchParams} from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
+import {useReportData} from '../hooks/useReportData';
 import DividendsTable from './DividendsTable';
 import TransactionsTable from './TransactionsTable';
-import { getSectionType, SECTION_TYPES } from '../utils/sectionUtils';
+import {getSectionType, SECTION_TYPES} from '../utils/sectionUtils';
 
 const DataExplorer: React.FC = () => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
