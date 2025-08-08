@@ -65,6 +65,13 @@ const Navigation: React.FC = () => {
       color: theme.palette.info.main
     },
     {
+      label: t('nav.optionsCalculator'),
+      path: '/options-calculator',
+      icon: <TrendingUpIcon />,
+      description: 'Options',
+      color: theme.palette.secondary.main
+    },
+    {
       label: t('nav.help'),
       path: '/help',
       icon: <HelpIcon />,

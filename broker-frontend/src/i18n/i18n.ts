@@ -12,6 +12,7 @@ const resources = {
         taxAnalysis: 'Tax Analysis',
         dataExplorer: 'Data Explorer',
         help: 'Codes & Help',
+        optionsCalculator: 'Options Calculator',
         brandName: 'Broker Analyzer'
       },
 
@@ -164,6 +165,57 @@ const resources = {
         }
       },
 
+      // Options Calculator
+      options: {
+        title: 'Options Profitability Calculator',
+        description: 'Calculate the profitability of buying or selling stock options',
+        tabs: {
+          calculator: 'Calculator',
+          scenarios: 'Scenarios',
+          analysis: 'Analysis'
+        },
+        optionType: 'Option Type',
+        call: 'Call Option',
+        put: 'Put Option',
+        strategy: 'Strategy',
+        buy: 'Buy Option',
+        sell: 'Sell Option',
+        stockPrice: 'Current Stock Price',
+        strikePrice: 'Strike Price',
+        premium: 'Option Premium',
+        expiration: 'Days to Expiration',
+        volatility: 'Implied Volatility (%)',
+        riskFreeRate: 'Risk-Free Rate (%)',
+        calculate: 'Calculate',
+        results: 'Results',
+        profitLoss: 'Profit/Loss',
+        breakeven: 'Breakeven Point',
+        maxProfit: 'Maximum Profit',
+        maxLoss: 'Maximum Loss',
+        probability: 'Probability of Profit',
+        greeks: 'Option Greeks',
+        delta: 'Delta',
+        gamma: 'Gamma',
+        theta: 'Theta',
+        vega: 'Vega',
+        rho: 'Rho',
+        scenarios: 'Price Scenarios',
+        currentPrice: 'Current Price',
+        targetPrice: 'Target Price',
+        timeDecay: 'Time Decay Effect',
+        volatilityImpact: 'Volatility Impact',
+        profitProbability: 'Profit Probability',
+        riskReturn: 'Risk/Return Analysis',
+        recommendation: 'Recommendation',
+        inputValidation: {
+          stockPriceRequired: 'Stock price is required',
+          strikePriceRequired: 'Strike price is required',
+          premiumRequired: 'Option premium is required',
+          invalidNumber: 'Please enter a valid number',
+          negativeValue: 'Value cannot be negative'
+        }
+      },
+
       // Common
       common: {
         loading: 'Loading...',
@@ -214,6 +266,7 @@ const resources = {
         taxAnalysis: 'Steueranalyse',
         dataExplorer: 'Datenexplorer',
         help: 'Codes & Hilfe',
+        optionsCalculator: 'Optionsrechner',
         brandName: 'Broker Analyzer'
       },
 
@@ -363,6 +416,57 @@ const resources = {
               'Übersichtliche Kategorisierung nach Datentypen'
             ]
           }
+        }
+      },
+
+      // Options Calculator
+      options: {
+        title: 'Optionen Rentabilitätsrechner',
+        description: 'Berechnen Sie die Rentabilität von Kauf oder Verkauf von Aktienoptionen',
+        tabs: {
+          calculator: 'Rechner',
+          scenarios: 'Szenarien',
+          analysis: 'Analyse'
+        },
+        optionType: 'Optionstyp',
+        call: 'Call-Option',
+        put: 'Put-Option',
+        strategy: 'Strategie',
+        buy: 'Option kaufen',
+        sell: 'Option verkaufen',
+        stockPrice: 'Aktueller Aktienkurs',
+        strikePrice: 'Ausübungspreis',
+        premium: 'Optionsprämie',
+        expiration: 'Tage bis Ablauf',
+        volatility: 'Implizite Volatilität (%)',
+        riskFreeRate: 'Risikofreier Zinssatz (%)',
+        calculate: 'Berechnen',
+        results: 'Ergebnisse',
+        profitLoss: 'Gewinn/Verlust',
+        breakeven: 'Break-Even-Punkt',
+        maxProfit: 'Maximaler Gewinn',
+        maxLoss: 'Maximaler Verlust',
+        probability: 'Gewinnwahrscheinlichkeit',
+        greeks: 'Options-Griechen',
+        delta: 'Delta',
+        gamma: 'Gamma',
+        theta: 'Theta',
+        vega: 'Vega',
+        rho: 'Rho',
+        scenarios: 'Kurs-Szenarien',
+        currentPrice: 'Aktueller Kurs',
+        targetPrice: 'Zielkurs',
+        timeDecay: 'Zeitwertverfall',
+        volatilityImpact: 'Volatilitätsauswirkung',
+        profitProbability: 'Gewinnwahrscheinlichkeit',
+        riskReturn: 'Risiko-/Rendite-Analyse',
+        recommendation: 'Empfehlung',
+        inputValidation: {
+          stockPriceRequired: 'Aktienkurs ist erforderlich',
+          strikePriceRequired: 'Ausübungspreis ist erforderlich',
+          premiumRequired: 'Optionsprämie ist erforderlich',
+          invalidNumber: 'Bitte geben Sie eine gültige Zahl ein',
+          negativeValue: 'Wert kann nicht negativ sein'
         }
       },
 
