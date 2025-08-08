@@ -27,7 +27,6 @@ import {CloudUpload, Code, DataArray, Delete, Info, TableChart, UploadFile, Visi
 import FileUpload from './FileUpload';
 import DividendsTable from './DividendsTable';
 import TransactionsTable from './TransactionsTable';
-import CodesHelp from './CodesHelp';
 import {getCodeDescription, translateAssetCategory, translateTransactionCode} from '../utils/codeMapping';
 import {useReportData} from '../hooks/useReportData';
 import {useFileUpload} from '../hooks/useFileUpload';
@@ -555,13 +554,6 @@ const Dashboard: React.FC = () => {
           {/* Fixed Statement and Kontoinformation Cards */}
           {statementSection && renderInfoCard('Statement - Bericht Information', statementSection, 'statement-section')}
           {kontoinformationSection && renderInfoCard('Kontoinformation', kontoinformationSection, 'kontoinformation-section')}
-
-          {/* Codes Help Section */}
-          {showCodesHelp && (
-            <Box sx={{ mb: 4 }}>
-              <CodesHelp />
-            </Box>
-          )}
 
           {/* Sections Tabs */}
           {tabSectionEntries.length > 0 && (

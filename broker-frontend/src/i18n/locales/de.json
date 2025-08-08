@@ -104,6 +104,19 @@
         },
         "transactionCodesInfo": "Diese Codes werden von Brokern verwendet, um verschiedene Transaktionstypen zu identifizieren.",
         "assetCategoriesInfo": "Asset-Kategorien klassifizieren die verschiedenen Arten von Finanzinstrumenten.",
+        "transactionCodes": {
+            "assignment": "Auftrag",
+            "opening": "Eröffnung",
+            "closing": "Schließung",
+            "liquidation": "Liquidation",
+            "transfer": "Transfer",
+            "dividend": "Dividende",
+            "interest": "Zinsen",
+            "fee": "Gebühr",
+            "tax": "Steuer",
+            "adjustment": "Anpassung",
+            "corporateAction": "Corporate Action"
+        },
         "categories": {
             "trading": "Handel",
             "income": "Einkommen",
