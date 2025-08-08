@@ -122,6 +122,32 @@ const resources = {
         },
         transactionCodesInfo: 'These codes are used by brokers to identify different transaction types.',
         assetCategoriesInfo: 'Asset categories classify the different types of financial instruments.',
+        categories: {
+          trading: 'Trading',
+          income: 'Income',
+          costs: 'Costs',
+          other: 'Other'
+        },
+        assetTypes: {
+          stock: 'Stock',
+          option: 'Option',
+          future: 'Future',
+          bond: 'Bond',
+          etf: 'ETF',
+          fund: 'Fund',
+          cash: 'Cash',
+          forex: 'Forex'
+        },
+        assetDetails: {
+          stock: 'Individual company shares',
+          option: 'Option contracts on underlying assets',
+          future: 'Futures contracts',
+          bond: 'Government and corporate bonds',
+          etf: 'Exchange Traded Funds',
+          fund: 'Investment funds',
+          cash: 'Liquidity and money market instruments',
+          forex: 'Foreign exchange transactions'
+        },
         sections: {
           csvUpload: {
             title: 'CSV File Upload',
@@ -376,6 +402,32 @@ const resources = {
         },
         transactionCodesInfo: 'Diese Codes werden von Brokern zur Kennzeichnung verschiedener Transaktionstypen verwendet.',
         assetCategoriesInfo: 'Asset-Kategorien klassifizieren die verschiedenen Arten von Finanzinstrumenten.',
+        categories: {
+          trading: 'Handel',
+          income: 'Einkommen',
+          costs: 'Kosten',
+          other: 'Sonstige'
+        },
+        assetTypes: {
+          stock: 'Aktie',
+          option: 'Option',
+          future: 'Futures',
+          bond: 'Anleihe',
+          etf: 'ETF',
+          fund: 'Fonds',
+          cash: 'Bargeld',
+          forex: 'Devisen'
+        },
+        assetDetails: {
+          stock: 'Aktien einzelner Unternehmen',
+          option: 'Optionsscheine auf Basiswerte',
+          future: 'Futures-Kontrakte',
+          bond: 'Staats- und Unternehmensanleihen',
+          etf: 'Exchange Traded Funds',
+          fund: 'Investmentfonds',
+          cash: 'Liquiditäts- und Geldmarktinstrumente',
+          forex: 'Devisenhandel'
+        },
         sections: {
           csvUpload: {
             title: 'CSV-Datei Upload',

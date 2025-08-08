@@ -1,112 +1,106 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Alert,
-  alpha,
   Box,
   Card,
   CardContent,
-  Chip,
+  Typography,
   Grid,
-  InputAdornment,
-  Paper,
-  Stack,
-  Tab,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Chip,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Tabs,
+  Paper,
   TextField,
-  Typography,
-  useTheme
+  InputAdornment,
+  Tabs,
+  Tab,
+  useTheme,
+  alpha,
+  Stack,
+  Alert,
+  Divider
 } from '@mui/material';
-import {AccountBalance, Assessment, Code, Euro, ExpandMore, Help, Search, ShowChart} from '@mui/icons-material';
+import {
+  ExpandMore,
+  Search,
+  Code,
+  Help,
+  Info,
+  Assessment,
+  AccountBalance,
+  Euro,
+  ShowChart
+} from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 const CodesAndHelp: React.FC = () => {
   const theme = useTheme();
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
 
-  // Transaction codes data
-  const transactionCodes = [
-    { code: 'A', description: 'Auftrag (Assignment)', category: 'Handel' },
-    { code: 'O', description: 'Eröffnung (Opening)', category: 'Handel' },
-    { code: 'C', description: 'Schließung (Closing)', category: 'Handel' },
-    { code: 'L', description: 'Liquidation', category: 'Handel' },
-    { code: 'T', description: 'Transfer', category: 'Handel' },
-    { code: 'D', description: 'Dividende', category: 'Einkommen' },
-    { code: 'DIV', description: 'Dividende', category: 'Einkommen' },
-    { code: 'INT', description: 'Zinsen (Interest)', category: 'Einkommen' },
-    { code: 'F', description: 'Gebühr (Fee)', category: 'Kosten' },
-    { code: 'FEE', description: 'Gebühr (Fee)', category: 'Kosten' },
-    { code: 'TAX', description: 'Steuer (Tax)', category: 'Kosten' },
-    { code: 'ADJ', description: 'Anpassung (Adjustment)', category: 'Sonstige' },
-    { code: 'CORP', description: 'Corporate Action', category: 'Sonstige' }
+  // Transaction codes data - using translations
+  const getTransactionCodes = () => [
+    { code: 'A', description: 'Auftrag (Assignment)', category: t('help.categories.trading') },
+    { code: 'O', description: 'Eröffnung (Opening)', category: t('help.categories.trading') },
+    { code: 'C', description: 'Schließung (Closing)', category: t('help.categories.trading') },
+    { code: 'L', description: 'Liquidation', category: t('help.categories.trading') },
+    { code: 'T', description: 'Transfer', category: t('help.categories.trading') },
+    { code: 'D', description: 'Dividende', category: t('help.categories.income') },
+    { code: 'DIV', description: 'Dividende', category: t('help.categories.income') },
+    { code: 'INT', description: 'Zinsen (Interest)', category: t('help.categories.income') },
+    { code: 'F', description: 'Gebühr (Fee)', category: t('help.categories.costs') },
+    { code: 'FEE', description: 'Gebühr (Fee)', category: t('help.categories.costs') },
+    { code: 'TAX', description: 'Steuer (Tax)', category: t('help.categories.costs') },
+    { code: 'ADJ', description: 'Anpassung (Adjustment)', category: t('help.categories.other') },
+    { code: 'CORP', description: 'Corporate Action', category: t('help.categories.other') }
   ];
 
-  // Asset categories
-  const assetCategories = [
-    { code: 'STK', description: 'Aktie (Stock)', details: 'Einzelaktien von Unternehmen' },
-    { code: 'OPT', description: 'Option', details: 'Optionskontrakte auf Basiswerte' },
-    { code: 'FUT', description: 'Future', details: 'Terminkontrakte' },
-    { code: 'BOND', description: 'Anleihe (Bond)', details: 'Staatsanleihen und Unternehmensanleihen' },
-    { code: 'ETF', description: 'ETF', details: 'Exchange Traded Funds' },
-    { code: 'FUND', description: 'Fonds', details: 'Investmentfonds' },
-    { code: 'CASH', description: 'Bargeld (Cash)', details: 'Liquidität und Geldmarktinstrumente' },
-    { code: 'FOREX', description: 'Devisen', details: 'Fremdwährungsgeschäfte' }
+  // Asset categories - using translations
+  const getAssetCategories = () => [
+    { code: 'STK', description: t('help.assetTypes.stock'), details: t('help.assetDetails.stock') },
+    { code: 'OPT', description: t('help.assetTypes.option'), details: t('help.assetDetails.option') },
+    { code: 'FUT', description: t('help.assetTypes.future'), details: t('help.assetDetails.future') },
+    { code: 'BOND', description: t('help.assetTypes.bond'), details: t('help.assetDetails.bond') },
+    { code: 'ETF', description: t('help.assetTypes.etf'), details: t('help.assetDetails.etf') },
+    { code: 'FUND', description: t('help.assetTypes.fund'), details: t('help.assetDetails.fund') },
+    { code: 'CASH', description: t('help.assetTypes.cash'), details: t('help.assetDetails.cash') },
+    { code: 'FOREX', description: t('help.assetTypes.forex'), details: t('help.assetDetails.forex') }
   ];
 
-  // Help sections
-  const helpSections = [
+  // Help sections - using translations
+  const getHelpSections = () => [
     {
-      title: 'CSV-Datei Upload',
+      title: t('help.sections.csvUpload.title'),
       icon: <Assessment />,
-      content: [
-        'Unterstützte Formate: CSV-Dateien von Interactive Brokers, Comdirect und anderen Brokern',
-        'Maximale Dateigröße: 50 MB',
-        'Die Datei wird automatisch analysiert und in Sektionen unterteilt',
-        'Alle Daten werden lokal verarbeitet und nicht dauerhaft gespeichert'
-      ]
+      content: t('help.sections.csvUpload.content', { returnObjects: true }) as string[]
     },
     {
-      title: 'Steueranalyse (KAP-Formular)',
+      title: t('help.sections.taxAnalysis.title'),
       icon: <Euro />,
-      content: [
-        'Automatische Berechnung von Kapitalerträgen und -verlusten',
-        'FIFO-Methode für die Zuordnung von Käufen und Verkäufen',
-        'Erfassung von Dividenden und ausländischen Quellensteuern',
-        'Export-ready Daten für die Steuererklärung',
-        'Unterscheidung zwischen kurz- und langfristigen Kapitalerträgen'
-      ]
+      content: t('help.sections.taxAnalysis.content', { returnObjects: true }) as string[]
     },
     {
-      title: 'Datenverarbeitung',
+      title: t('help.sections.dataProcessing.title'),
       icon: <ShowChart />,
-      content: [
-        'Flexible CSV-Parser für verschiedene Broker-Formate',
-        'Automatische Erkennung von Transaktionstypen',
-        'Währungsumrechnung und Kostenberechnung',
-        'Gruppierung von zusammengehörigen Transaktionen',
-        'Validierung und Bereinigung der Eingabedaten'
-      ]
+      content: t('help.sections.dataProcessing.content', { returnObjects: true }) as string[]
     },
     {
-      title: 'Datenexplorer',
+      title: t('help.sections.dataExplorer.title'),
       icon: <AccountBalance />,
-      content: [
-        'Strukturierte Ansicht aller verfügbaren Datensektionen',
-        'Such- und Filterfunktionen für spezifische Daten',
-        'Export-Möglichkeiten für einzelne Sektionen',
-        'Detailansichten für Trades, Dividenden und andere Transaktionen',
-        'Übersichtliche Kategorisierung nach Datentypen'
-      ]
+      content: t('help.sections.dataExplorer.content', { returnObjects: true }) as string[]
     }
   ];
+
+  const transactionCodes = getTransactionCodes();
+  const assetCategories = getAssetCategories();
+  const helpSections = getHelpSections();
 
   const filteredCodes = transactionCodes.filter(item =>
     item.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -129,10 +123,10 @@ const CodesAndHelp: React.FC = () => {
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 1 }}>
-          Codes & Hilfe
+          {t('help.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Nachschlagewerk für Transaktionscodes und Anwendungshilfe
+          {t('help.description')}
         </Typography>
       </Box>
 
@@ -141,7 +135,7 @@ const CodesAndHelp: React.FC = () => {
         <CardContent>
           <TextField
             fullWidth
-            placeholder="Suche nach Codes oder Beschreibungen..."
+            placeholder={t('help.search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{
@@ -159,9 +153,9 @@ const CodesAndHelp: React.FC = () => {
       <Card elevation={2} sx={{ borderRadius: 3 }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tabs value={selectedTab} onChange={(_, value) => setSelectedTab(value)}>
-            <Tab icon={<Code />} label="Transaktionscodes" />
-            <Tab icon={<Assessment />} label="Asset-Kategorien" />
-            <Tab icon={<Help />} label="Anwendungshilfe" />
+            <Tab icon={<Code />} label={t('help.tabs.transactionCodes')} />
+            <Tab icon={<Assessment />} label={t('help.tabs.assetCategories')} />
+            <Tab icon={<Help />} label={t('help.tabs.applicationHelp')} />
           </Tabs>
         </Box>
 
@@ -169,34 +163,34 @@ const CodesAndHelp: React.FC = () => {
         <TabPanel value={selectedTab} index={0}>
           <CardContent>
             <Alert severity="info" sx={{ mb: 3, borderRadius: 2 }}>
-              Diese Codes werden von Brokern zur Kennzeichnung verschiedener Transaktionstypen verwendet.
+              {t('help.transactionCodesInfo')}
             </Alert>
 
             <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 2 }}>
               <Table>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: alpha(theme.palette.primary.main, 0.1) }}>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Code</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Beschreibung</TableCell>
-                    <TableCell sx={{ fontWeight: 'bold' }}>Kategorie</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>{t('table.code')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>{t('table.description')}</TableCell>
+                    <TableCell sx={{ fontWeight: 'bold' }}>{t('table.category')}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {filteredCodes.map((item, index) => (
                     <TableRow key={index} hover>
                       <TableCell>
-                        <Chip
-                          label={item.code}
-                          size="small"
+                        <Chip 
+                          label={item.code} 
+                          size="small" 
                           color="primary"
                           sx={{ fontFamily: 'monospace', fontWeight: 'bold' }}
                         />
                       </TableCell>
                       <TableCell>{item.description}</TableCell>
                       <TableCell>
-                        <Chip
-                          label={item.category}
-                          size="small"
+                        <Chip 
+                          label={item.category} 
+                          size="small" 
                           variant="outlined"
                         />
                       </TableCell>
@@ -212,26 +206,26 @@ const CodesAndHelp: React.FC = () => {
         <TabPanel value={selectedTab} index={1}>
           <CardContent>
             <Alert severity="info" sx={{ mb: 3, borderRadius: 2 }}>
-              Asset-Kategorien klassifizieren die verschiedenen Arten von Finanzinstrumenten.
+              {t('help.assetCategoriesInfo')}
             </Alert>
 
             <Grid container spacing={2}>
               {filteredAssets.map((item, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card
-                    variant="outlined"
-                    sx={{
+                  <Card 
+                    variant="outlined" 
+                    sx={{ 
                       borderRadius: 2,
-                      '&:hover': {
-                        backgroundColor: alpha(theme.palette.primary.main, 0.05)
+                      '&:hover': { 
+                        backgroundColor: alpha(theme.palette.primary.main, 0.05) 
                       }
                     }}
                   >
                     <CardContent>
                       <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-                        <Chip
-                          label={item.code}
-                          size="small"
+                        <Chip 
+                          label={item.code} 
+                          size="small" 
                           color="secondary"
                           sx={{ mr: 1, fontFamily: 'monospace' }}
                         />
@@ -253,18 +247,18 @@ const CodesAndHelp: React.FC = () => {
           <CardContent>
             <Stack spacing={3}>
               {helpSections.map((section, index) => (
-                <Accordion
+                <Accordion 
                   key={index}
                   elevation={0}
-                  sx={{
+                  sx={{ 
                     border: `1px solid ${theme.palette.divider}`,
                     borderRadius: 2,
                     '&:before': { display: 'none' }
                   }}
                 >
-                  <AccordionSummary
+                  <AccordionSummary 
                     expandIcon={<ExpandMore />}
-                    sx={{
+                    sx={{ 
                       backgroundColor: alpha(theme.palette.primary.main, 0.05),
                       borderRadius: '8px 8px 0 0'
                     }}
