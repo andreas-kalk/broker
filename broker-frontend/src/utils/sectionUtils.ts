@@ -86,3 +86,8 @@ export const separateImportantFields = (
 
   return { important, other };
 };
+
+/**
+ * Re-export SECTION_TYPES for convenience
+ */
+export { SECTION_TYPES } from '../config/constants';
