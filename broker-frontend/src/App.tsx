@@ -3,7 +3,7 @@ import {ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import {Container, Box} from '@mui/material';
 import Navigation from './components/Navigation';
-import ModernDashboard from './components/ModernDashboard';
+import Dashboard from './components/Dashboard.tsx';
 import DataExplorer from './components/DataExplorer';
 import TaxAnalysis from './components/TaxAnalysis';
 import CodesAndHelp from './components/CodesAndHelp';
@@ -27,7 +27,7 @@ function App() {
                         }}
                     >
                         <Routes>
-                            <Route path="/" element={<ModernDashboard/>}/>
+                            <Route path="/" element={<Dashboard/>}/>
                             <Route path="/data-explorer" element={<DataExplorer/>}/>
                             <Route path="/tax-analysis" element={<TaxAnalysis/>}/>
                             <Route path="/help" element={<CodesAndHelp/>}/>
