@@ -8,15 +8,16 @@ import java.util.List;
  * Repräsentiert eine Position im Portfolio mit allen zugehörigen Daten
  */
 public class Position {
+
     private String symbol;
-    private String description;
     private String assetCategory;
     private String currency;
     private BigDecimal quantity;
-    private BigDecimal marketPrice;
-    private BigDecimal marketValue;
-    private BigDecimal unrealizedPnL;
-    private BigDecimal realizedPnL;
+    private BigDecimal costPrice;
+    private BigDecimal costBasis;
+    private BigDecimal value;
+    private BigDecimal closingPrice;
+    private BigDecimal winLoss;
 
     // Zugehörige Transaktionen
     private List<Transaction> transactions = new ArrayList<>();
@@ -27,11 +28,11 @@ public class Position {
     // Performance-Daten
     private PerformanceData performance;
 
-    public Position() {}
+    public Position() {
+    }
 
-    public Position(String symbol, String description) {
+    public Position(String symbol) {
         this.symbol = symbol;
-        this.description = description;
     }
 
     // Getters and Setters
@@ -41,14 +42,6 @@ public class Position {
 
     public void setSymbol(String symbol) {
         this.symbol = symbol;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getAssetCategory() {
@@ -73,38 +66,6 @@ public class Position {
 
     public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
-    }
-
-    public BigDecimal getMarketPrice() {
-        return marketPrice;
-    }
-
-    public void setMarketPrice(BigDecimal marketPrice) {
-        this.marketPrice = marketPrice;
-    }
-
-    public BigDecimal getMarketValue() {
-        return marketValue;
-    }
-
-    public void setMarketValue(BigDecimal marketValue) {
-        this.marketValue = marketValue;
-    }
-
-    public BigDecimal getUnrealizedPnL() {
-        return unrealizedPnL;
-    }
-
-    public void setUnrealizedPnL(BigDecimal unrealizedPnL) {
-        this.unrealizedPnL = unrealizedPnL;
-    }
-
-    public BigDecimal getRealizedPnL() {
-        return realizedPnL;
-    }
-
-    public void setRealizedPnL(BigDecimal realizedPnL) {
-        this.realizedPnL = realizedPnL;
     }
 
     public List<Transaction> getTransactions() {
@@ -139,14 +100,61 @@ public class Position {
         this.performance = performance;
     }
 
+    public BigDecimal getCostPrice() {
+        return costPrice;
+    }
+
+    public void setCostPrice(BigDecimal costPrice) {
+        this.costPrice = costPrice;
+    }
+
+    public BigDecimal getCostBasis() {
+        return costBasis;
+    }
+
+    public void setCostBasis(BigDecimal costBasis) {
+        this.costBasis = costBasis;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+
+    public BigDecimal getClosingPrice() {
+        return closingPrice;
+    }
+
+    public void setClosingPrice(BigDecimal closingPrice) {
+        this.closingPrice = closingPrice;
+    }
+
+    public BigDecimal getWinLoss() {
+        return winLoss;
+    }
+
+    public void setWinLoss(BigDecimal winLoss) {
+        this.winLoss = winLoss;
+    }
+
     @Override
     public String toString() {
         return "Position{" +
                 "symbol='" + symbol + '\'' +
-                ", description='" + description + '\'' +
+                ", assetCategory='" + assetCategory + '\'' +
+                ", currency='" + currency + '\'' +
                 ", quantity=" + quantity +
-                ", marketValue=" + marketValue +
-                ", unrealizedPnL=" + unrealizedPnL +
+                ", costPrice=" + costPrice +
+                ", costBasis=" + costBasis +
+                ", value=" + value +
+                ", closingPrice=" + closingPrice +
+                ", transactions=" + transactions +
+                ", dividends=" + dividends +
+                ", performance=" + performance +
+                ", unrealized win/loss=" + winLoss +
                 '}';
     }
 }

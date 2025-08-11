@@ -7,43 +7,27 @@ import java.time.LocalDateTime;
  * Repräsentiert eine Transaktion (Kauf/Verkauf) für ein Wertpapier
  */
 public class Transaction {
-    private String symbol;
-    private String description;
-    private LocalDateTime dateTime;
-    private String action; // BOT (Kauf), SLD (Verkauf), etc.
-    private BigDecimal quantity;
-    private BigDecimal price;
-    private BigDecimal proceeds; // Erlös/Kosten
-    private BigDecimal commission;
+
+    private Asset asset;
+
     private String currency;
-    private String exchange;
-    private String orderId;
-    private String transactionId;
+    private LocalDateTime dateTime;
+    private BigDecimal quantity;
+    private BigDecimal price; // T-.Kurs
+    private BigDecimal proceeds; // Erlös/Kosten
+    private BigDecimal fees;
+    private BigDecimal subTotal; // Zwischensumme (proceeds - fees)
+    private BigDecimal realizedPnL; // Realisierter Gewinn/Verlust
+    private String code;
 
-    public Transaction() {}
+    private transient String dataType;
 
-    public Transaction(String symbol, String action, BigDecimal quantity, BigDecimal price) {
-        this.symbol = symbol;
-        this.action = action;
-        this.quantity = quantity;
-        this.price = price;
+    public Asset getAsset() {
+        return asset;
     }
 
-    // Getters and Setters
-    public String getSymbol() {
-        return symbol;
-    }
-
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setAsset(Asset asset) {
+        this.asset = asset;
     }
 
     public LocalDateTime getDateTime() {
@@ -55,11 +39,7 @@ public class Transaction {
     }
 
     public String getAction() {
-        return action;
-    }
-
-    public void setAction(String action) {
-        this.action = action;
+        return quantity.compareTo(BigDecimal.ZERO) < 0 ? "SELL" : "BUY";
     }
 
     public BigDecimal getQuantity() {
@@ -86,12 +66,12 @@ public class Transaction {
         this.proceeds = proceeds;
     }
 
-    public BigDecimal getCommission() {
-        return commission;
+    public BigDecimal getFees() {
+        return fees;
     }
 
-    public void setCommission(BigDecimal commission) {
-        this.commission = commission;
+    public void setFees(BigDecimal fees) {
+        this.fees = fees;
     }
 
     public String getCurrency() {
@@ -102,35 +82,43 @@ public class Transaction {
         this.currency = currency;
     }
 
-    public String getExchange() {
-        return exchange;
+    public BigDecimal getSubTotal() {
+        return subTotal;
     }
 
-    public void setExchange(String exchange) {
-        this.exchange = exchange;
+    public void setSubTotal(BigDecimal subTotal) {
+        this.subTotal = subTotal;
     }
 
-    public String getOrderId() {
-        return orderId;
+    public BigDecimal getRealizedPnL() {
+        return realizedPnL;
     }
 
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public void setRealizedPnL(BigDecimal realizedPnL) {
+        this.realizedPnL = realizedPnL;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public String getCode() {
+        return code;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
     @Override
     public String toString() {
         return "Transaction{" +
-                "symbol='" + symbol + '\'' +
-                ", action='" + action + '\'' +
+                "asset='" + asset + '\'' +
+                ", action='" + getAction() + '\'' +
                 ", quantity=" + quantity +
                 ", price=" + price +
                 ", dateTime=" + dateTime +
