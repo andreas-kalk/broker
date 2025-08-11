@@ -13,7 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import com.kalk.broker.backend.config.CsvField;
+import com.kalk.broker.backend.config.ReportField;
 import com.kalk.broker.backend.pojo.Report;
 import com.kalk.broker.backend.pojo.SectionData;
 
@@ -92,7 +92,7 @@ public class ReportUtils {
         }
     }
 
-    public static String getRowValue(Map<String, String> row, CsvField field) {
+    public static String getRowValue(Map<String, String> row, ReportField field) {
         for (String key : field.getKeys()) {
             String value = row.get(key);
             if (value != null && !value.trim().isEmpty()) {

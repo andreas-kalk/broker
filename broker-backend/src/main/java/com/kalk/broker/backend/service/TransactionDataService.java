@@ -1,24 +1,28 @@
 package com.kalk.broker.backend.service;
 
-import static com.kalk.broker.backend.config.CsvField.ASSET_CATEGORY;
-import static com.kalk.broker.backend.config.CsvField.CODE;
-import static com.kalk.broker.backend.config.CsvField.CURRENCY;
-import static com.kalk.broker.backend.config.CsvField.DATETIME;
-import static com.kalk.broker.backend.config.CsvField.DATE_TYPE;
-import static com.kalk.broker.backend.config.CsvField.FEES;
-import static com.kalk.broker.backend.config.CsvField.PRICE;
-import static com.kalk.broker.backend.config.CsvField.PROCEEDS;
-import static com.kalk.broker.backend.config.CsvField.QUANTITY;
-import static com.kalk.broker.backend.config.CsvField.REALIZED_PNL;
-import static com.kalk.broker.backend.config.CsvField.SUBTOTAL;
-import static com.kalk.broker.backend.config.CsvField.SYMBOL;
-import static com.kalk.broker.backend.config.CsvField.TRANSACTIONS;
+import static com.kalk.broker.backend.config.ReportConstants.ASSET_OPTION;
+import static com.kalk.broker.backend.config.ReportConstants.DATA_TYPE_DATA;
+import static com.kalk.broker.backend.config.ReportConstants.DATA_TYPE_SUBTOTAL;
+import static com.kalk.broker.backend.config.ReportField.ASSET_CATEGORY;
+import static com.kalk.broker.backend.config.ReportField.CODE;
+import static com.kalk.broker.backend.config.ReportField.CURRENCY;
+import static com.kalk.broker.backend.config.ReportField.DATETIME;
+import static com.kalk.broker.backend.config.ReportField.DATE_TYPE;
+import static com.kalk.broker.backend.config.ReportField.FEES;
+import static com.kalk.broker.backend.config.ReportField.PRICE;
+import static com.kalk.broker.backend.config.ReportField.PROCEEDS;
+import static com.kalk.broker.backend.config.ReportField.QUANTITY;
+import static com.kalk.broker.backend.config.ReportField.REALIZED_PNL;
+import static com.kalk.broker.backend.config.ReportField.SUBTOTAL;
+import static com.kalk.broker.backend.config.ReportField.SYMBOL;
+import static com.kalk.broker.backend.config.ReportField.TRANSACTIONS;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import com.kalk.broker.backend.pojo.Asset;
 import com.kalk.broker.backend.pojo.IndexOption;
@@ -30,9 +34,21 @@ import com.kalk.broker.backend.pojo.Transaction;
 import com.kalk.broker.backend.utils.ReportUtils;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service for processing transaction data from a report.
+ * It processes the transactions section of the report and returns a list of
+ * {@link SymbolTransactions}, which contains the asset information and a list of {@link Transaction transactions}
+ * for that asset, along with calculated totals such as proceeds, fees, and realized PnL.
+ */
 @Service
 public class TransactionDataService {
 
+    /**
+     * Processes the transactions section of the given report.
+     *
+     * @param report the report containing transaction data
+     * @return a list of {@link SymbolTransactions} containing processed transactions
+     */
     public List<SymbolTransactions> processTransactions(Report report) {
         for (String sectionName : TRANSACTIONS.getKeys()) {
             SectionData section = report.getSection(sectionName);
@@ -49,7 +65,7 @@ public class TransactionDataService {
 
         section.getDataRows()
                 .forEach(row -> {
-                    if (ReportUtils.getRowValue(row, SYMBOL) != null) {
+                    if (Objects.nonNull(ReportUtils.getRowValue(row, SYMBOL))) {
                         Transaction transaction = createTransactionFromRow(row);
                         transactionsBySymbol.computeIfAbsent(transaction.getAsset().getKey(), k -> new ArrayList<>()).add(transaction);
                     }
@@ -61,14 +77,14 @@ public class TransactionDataService {
             SymbolTransactions symbolTransactions = new SymbolTransactions();
 
             entry.getValue().forEach(transaction -> {
-                if (transaction.getDataType().equalsIgnoreCase("subtotal")) {
+                if (transaction.getDataType().equalsIgnoreCase(DATA_TYPE_SUBTOTAL.getKey())) {
                     symbolTransactions.setCurrency(transaction.getCurrency());
                     symbolTransactions.setAsset(transaction.getAsset());
                     symbolTransactions.setSumProceeds(transaction.getProceeds());
                     symbolTransactions.setSumFees(transaction.getFees());
                     symbolTransactions.setSumRealizedPnL(transaction.getRealizedPnL());
                 }
-                if (transaction.getDataType().equalsIgnoreCase("data")) {
+                if (transaction.getDataType().equalsIgnoreCase(DATA_TYPE_DATA.getKey())) {
                     symbolTransactions.addTransaction(transaction);
                 }
             });
@@ -84,8 +100,8 @@ public class TransactionDataService {
         String assetCategory = ReportUtils.getRowValue(row, ASSET_CATEGORY);
         String symbol = ReportUtils.getRowValue(row, SYMBOL);
         Asset asset = null;
-        if (symbol != null && assetCategory != null) {
-            if (assetCategory.toLowerCase(Locale.ROOT).contains("indexoptionen")) {
+        if (Objects.nonNull(symbol) && Objects.nonNull(assetCategory)) {
+            if (assetCategory.toLowerCase(Locale.ROOT).contains(ASSET_OPTION.getKey())) {
                 asset = new IndexOption(symbol, assetCategory);
             } else {
                 asset = new Share(symbol, assetCategory);
@@ -95,13 +111,11 @@ public class TransactionDataService {
         transaction.setAsset(asset);
         transaction.setCurrency(ReportUtils.getRowValue(row, CURRENCY));
 
-        // Datum parsen
         String dateStr = ReportUtils.getRowValue(row, DATETIME);
         if (dateStr != null) {
             transaction.setDateTime(ReportUtils.parseLocalDateTime(dateStr));
         }
 
-        // Numerische Werte
         transaction.setQuantity(ReportUtils.parseBigDecimal(ReportUtils.getRowValue(row, QUANTITY)));
         transaction.setPrice(ReportUtils.parseBigDecimal(ReportUtils.getRowValue(row, PRICE)));
         transaction.setProceeds(ReportUtils.parseBigDecimal(ReportUtils.getRowValue(row, PROCEEDS)));

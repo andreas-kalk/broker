@@ -1,8 +1,8 @@
 package com.kalk.broker.backend.service;
 
-import static com.kalk.broker.backend.config.CsvField.ASSET_CATEGORY;
-import static com.kalk.broker.backend.config.CsvField.CURRENCY;
-import static com.kalk.broker.backend.config.CsvField.SYMBOL;
+import static com.kalk.broker.backend.config.ReportField.ASSET_CATEGORY;
+import static com.kalk.broker.backend.config.ReportField.CURRENCY;
+import static com.kalk.broker.backend.config.ReportField.SYMBOL;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public enum CsvField {
+public enum ReportField {
 
     TRANSACTIONS("transaktionen", "transactions", "trades"),
 
@@ -23,13 +23,13 @@ public enum CsvField {
     CODE("Code"),
     DATE_TYPE("_record_type");
 
-    private static final Map<String, CsvField> KEY_MAP = Arrays.stream(CsvField.values())
+    private static final Map<String, ReportField> KEY_MAP = Arrays.stream(ReportField.values())
             .flatMap(field -> field.keys.stream().map(key -> Map.entry(key, field)))
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     private final Set<String> keys = new HashSet<>();
 
-    CsvField(String... keys) {
+    ReportField(String... keys) {
         this.keys.addAll(Arrays.stream(keys).collect(Collectors.toSet()));
     }
 
@@ -37,7 +37,7 @@ public enum CsvField {
         return keys;
     }
 
-    public static CsvField fromKey(String key) {
+    public static ReportField fromKey(String key) {
         return KEY_MAP.get(key);
     }
 }
