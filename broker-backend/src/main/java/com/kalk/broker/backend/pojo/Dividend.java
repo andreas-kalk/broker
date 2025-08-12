@@ -2,6 +2,7 @@ package com.kalk.broker.backend.pojo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Repräsentiert eine Dividendenzahlung
@@ -46,16 +47,16 @@ public class Dividend {
         return payDate;
     }
 
-    public void setPayDate(LocalDate payDate) {
-        this.payDate = payDate;
+    public void setPayDate(LocalDateTime payDate) {
+        this.payDate = payDate.toLocalDate();
     }
 
     public LocalDate getExDate() {
         return exDate;
     }
 
-    public void setExDate(LocalDate exDate) {
-        this.exDate = exDate;
+    public void setExDate(LocalDateTime exDate) {
+        this.exDate = exDate.toLocalDate();
     }
 
     public BigDecimal getAmount() {

@@ -8,15 +8,22 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.kalk.broker.backend.config.ReportField;
 import com.kalk.broker.backend.pojo.Report;
 import com.kalk.broker.backend.pojo.SectionData;
 
+/**
+ * Utility class for handling report-related operations.
+ * Provides methods to extract specific date from reports e.g. base currency, report date.
+ * It also parses date strings and handle BigDecimal values from report data.
+ */
 public class ReportUtils {
 
     private static final List<DateTimeFormatter> DATE_TIME_FORMATTERS = List.of(
@@ -32,16 +39,30 @@ public class ReportUtils {
     private ReportUtils() {
     }
 
+    /**
+     * Retrieves the base currency from the report.
+     * If not found, defaults to the system's default currency code.
+     *
+     * @param report the report from which to extract the base currency
+     * @return the base currency code
+     */
     public static String getBaseCurrency(Report report) {
-        SectionData kontoInformationen = report.getSection("kontoinformation");
-        return kontoInformationen.getDataRows()
+        SectionData section = report.getSection("kontoinformation");
+        return section.getDataRows()
                 .stream()
                 .filter(e -> e.get("Feldname").equalsIgnoreCase("Basiswährung"))
                 .findFirst()
                 .map(e -> e.getOrDefault("Feldwert", "EUR"))
-                .orElse("not found");
+                .orElse(Currency.getInstance(Locale.getDefault()).getCurrencyCode());
     }
 
+    /**
+     * Retrieves the report date from the report.
+     * If not found, defaults to the current date and time.
+     *
+     * @param report the report from which to extract the report date
+     * @return the report date as LocalDateTime
+     */
     public static LocalDateTime getReportDate(Report report) {
         SectionData statement = report.getSection("statement");
         return statement.getDataRows()
@@ -52,6 +73,13 @@ public class ReportUtils {
                 .orElse(LocalDateTime.now());
     }
 
+    /**
+     * Parses a date string into a LocalDateTime object.
+     * If parsing fails, returns the current date and time.
+     *
+     * @param dateString the date string to parse
+     * @return the parsed LocalDateTime or current date and time if parsing fails
+     */
     public static LocalDateTime parseLocalDateTime(String dateString) {
         return parseTemporal(dateString)
                 .map(ReportUtils::createLocalDateTime)
@@ -68,6 +96,10 @@ public class ReportUtils {
     }
 
     private static Optional<TemporalAccessor> parseTemporal(String dateString) {
+        if(Objects.isNull(dateString) || dateString.isEmpty()) {
+            return Optional.empty();
+        }
+
         for (DateTimeFormatter formatter : DATE_TIME_FORMATTERS) {
             try {
                 return Optional.of(formatter.parse(dateString.replace(",", "")));
@@ -78,6 +110,13 @@ public class ReportUtils {
         return Optional.empty();
     }
 
+    /**
+     * Parses a string into a BigDecimal.
+     * Handles both comma and dot as decimal separators and removes thousands separators.
+     *
+     * @param value the string to parse
+     * @return the parsed BigDecimal or null if parsing fails
+     */
     public static BigDecimal parseBigDecimal(String value) {
         if (value == null || value.trim().isEmpty()) {
             return null;
@@ -92,13 +131,13 @@ public class ReportUtils {
         }
     }
 
-    public static String getRowValue(Map<String, String> row, ReportField field) {
+    public static Optional<String> getRowValue(Map<String, String> row, ReportField field) {
         for (String key : field.getKeys()) {
             String value = row.get(key);
             if (value != null && !value.trim().isEmpty()) {
-                return value.trim();
+                return Optional.of(value.trim());
             }
         }
-        return null;
+        return Optional.empty();
     }
 }

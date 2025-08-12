@@ -13,11 +13,12 @@ public class Position {
     private String assetCategory;
     private String currency;
     private BigDecimal quantity;
-    private BigDecimal costPrice;
+    private BigDecimal openingPrice;
     private BigDecimal costBasis;
     private BigDecimal value;
     private BigDecimal closingPrice;
     private BigDecimal winLoss;
+    private String code;
 
     // Zugehörige Transaktionen
     private List<Transaction> transactions = new ArrayList<>();
@@ -101,11 +102,11 @@ public class Position {
     }
 
     public BigDecimal getCostPrice() {
-        return costPrice;
+        return openingPrice;
     }
 
-    public void setCostPrice(BigDecimal costPrice) {
-        this.costPrice = costPrice;
+    public void setOpeningPrice(BigDecimal openPrice) {
+        this.openingPrice = openPrice;
     }
 
     public BigDecimal getCostBasis() {
@@ -140,6 +141,14 @@ public class Position {
         this.winLoss = winLoss;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     @Override
     public String toString() {
         return "Position{" +
@@ -147,7 +156,7 @@ public class Position {
                 ", assetCategory='" + assetCategory + '\'' +
                 ", currency='" + currency + '\'' +
                 ", quantity=" + quantity +
-                ", costPrice=" + costPrice +
+                ", openingPrice=" + openingPrice +
                 ", costBasis=" + costBasis +
                 ", value=" + value +
                 ", closingPrice=" + closingPrice +

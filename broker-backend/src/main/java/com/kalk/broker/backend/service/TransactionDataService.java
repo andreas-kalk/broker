@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import com.kalk.broker.backend.pojo.Asset;
 import com.kalk.broker.backend.pojo.IndexOption;
@@ -67,7 +68,9 @@ public class TransactionDataService {
                 .forEach(row -> {
                     if (Objects.nonNull(ReportUtils.getRowValue(row, SYMBOL))) {
                         Transaction transaction = createTransactionFromRow(row);
-                        transactionsBySymbol.computeIfAbsent(transaction.getAsset().getKey(), k -> new ArrayList<>()).add(transaction);
+                        if (Objects.nonNull(transaction.getAsset())) {
+                            transactionsBySymbol.computeIfAbsent(transaction.getAsset().getKey(), k -> new ArrayList<>()).add(transaction);
+                        }
                     }
                 });
 
@@ -97,35 +100,32 @@ public class TransactionDataService {
     private Transaction createTransactionFromRow(Map<String, String> row) {
         Transaction transaction = new Transaction();
 
-        String assetCategory = ReportUtils.getRowValue(row, ASSET_CATEGORY);
-        String symbol = ReportUtils.getRowValue(row, SYMBOL);
+        Optional<String> assetCategory = ReportUtils.getRowValue(row, ASSET_CATEGORY);
+        Optional<String> symbol = ReportUtils.getRowValue(row, SYMBOL);
         Asset asset = null;
-        if (Objects.nonNull(symbol) && Objects.nonNull(assetCategory)) {
-            if (assetCategory.toLowerCase(Locale.ROOT).contains(ASSET_OPTION.getKey())) {
-                asset = new IndexOption(symbol, assetCategory);
+        if (symbol.isPresent() && assetCategory.isPresent()) {
+            if (assetCategory.get().toLowerCase(Locale.ROOT).contains(ASSET_OPTION.getKey())) {
+                asset = new IndexOption(symbol.get(), assetCategory.get());
             } else {
-                asset = new Share(symbol, assetCategory);
+                asset = new Share(symbol.get(), assetCategory.get());
             }
         }
 
         transaction.setAsset(asset);
-        transaction.setCurrency(ReportUtils.getRowValue(row, CURRENCY));
+        ReportUtils.getRowValue(row, CURRENCY).ifPresent(transaction::setCurrency);
 
-        String dateStr = ReportUtils.getRowValue(row, DATETIME);
-        if (dateStr != null) {
-            transaction.setDateTime(ReportUtils.parseLocalDateTime(dateStr));
-        }
+        Optional<String> dateStr = ReportUtils.getRowValue(row, DATETIME);
+        dateStr.ifPresent(s -> transaction.setDateTime(ReportUtils.parseLocalDateTime(s)));
 
-        transaction.setQuantity(ReportUtils.parseBigDecimal(ReportUtils.getRowValue(row, QUANTITY)));
-        transaction.setPrice(ReportUtils.parseBigDecimal(ReportUtils.getRowValue(row, PRICE)));
-        transaction.setProceeds(ReportUtils.parseBigDecimal(ReportUtils.getRowValue(row, PROCEEDS)));
-        transaction.setFees(ReportUtils.parseBigDecimal(ReportUtils.getRowValue(row, FEES)));
+        ReportUtils.getRowValue(row, QUANTITY).map(ReportUtils::parseBigDecimal).ifPresent(transaction::setQuantity);
+        ReportUtils.getRowValue(row, PRICE).map(ReportUtils::parseBigDecimal).ifPresent(transaction::setPrice);
+        ReportUtils.getRowValue(row, PROCEEDS).map(ReportUtils::parseBigDecimal).ifPresent(transaction::setProceeds);
+        ReportUtils.getRowValue(row, FEES).map(ReportUtils::parseBigDecimal).ifPresent(transaction::setFees);
 
-        transaction.setSubTotal(ReportUtils.parseBigDecimal(ReportUtils.getRowValue(row, SUBTOTAL)));
-        transaction.setRealizedPnL(ReportUtils.parseBigDecimal(ReportUtils.getRowValue(row, REALIZED_PNL)));
-        transaction.setCode(ReportUtils.getRowValue(row, CODE));
-
-        transaction.setDataType(ReportUtils.getRowValue(row, DATE_TYPE));
+        ReportUtils.getRowValue(row, SUBTOTAL).map(ReportUtils::parseBigDecimal).ifPresent(transaction::setSubTotal);
+        ReportUtils.getRowValue(row, REALIZED_PNL).map(ReportUtils::parseBigDecimal).ifPresent(transaction::setRealizedPnL);
+        ReportUtils.getRowValue(row, CODE).ifPresent(transaction::setCode);
+        ReportUtils.getRowValue(row, DATE_TYPE).ifPresent(transaction::setDataType);
 
         return transaction;
     }

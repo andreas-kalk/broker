@@ -1,18 +1,23 @@
 package com.kalk.broker.backend.service;
 
 import static com.kalk.broker.backend.config.ReportField.ASSET_CATEGORY;
+import static com.kalk.broker.backend.config.ReportField.CLOSING_PRICE;
+import static com.kalk.broker.backend.config.ReportField.CODE;
+import static com.kalk.broker.backend.config.ReportField.COST_BASIS;
 import static com.kalk.broker.backend.config.ReportField.CURRENCY;
+import static com.kalk.broker.backend.config.ReportField.OPENING_PRICE;
+import static com.kalk.broker.backend.config.ReportField.QUANTITY;
 import static com.kalk.broker.backend.config.ReportField.SYMBOL;
+import static com.kalk.broker.backend.config.ReportField.UNREALIZED_PNL;
+import static com.kalk.broker.backend.config.ReportField.VALUE;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import com.kalk.broker.backend.pojo.Dividend;
 import com.kalk.broker.backend.pojo.PerformanceData;
@@ -36,13 +41,6 @@ public class PortfolioDataService {
     public PortfolioDataService(TransactionDataService transcationDataService) {
         this.transcationDataService = transcationDataService;
     }
-
-    private static final DateTimeFormatter[] DATE_FORMATTERS = {
-            DateTimeFormatter.ofPattern("yyyy-MM-dd"),
-            DateTimeFormatter.ofPattern("dd.MM.yyyy"),
-            DateTimeFormatter.ofPattern("MM/dd/yyyy"),
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-    };
 
     /**
      * Erstellt ein Portfolio aus den Report-Daten
@@ -109,18 +107,17 @@ public class PortfolioDataService {
     private Position createPositionFromRow(Map<String, String> row) {
         Position position = new Position();
 
-        // Flexible Zuordnung der Spalten basierend auf verfügbaren Keys
-        position.setSymbol(ReportUtils.getRowValue(row, SYMBOL));
-        position.setAssetCategory(ReportUtils.getRowValue(row, ASSET_CATEGORY));
-        position.setCurrency(ReportUtils.getRowValue(row, CURRENCY));
+        ReportUtils.getRowValue(row, SYMBOL).ifPresent(position::setSymbol);
+        ReportUtils.getRowValue(row, ASSET_CATEGORY).ifPresent(position::setAssetCategory);
+        ReportUtils.getRowValue(row, CURRENCY).ifPresent(position::setCurrency);
 
-        // Numerische Werte parsen
-        position.setQuantity(ReportUtils.parseBigDecimal(getValueByKeys(row, "Menge", "Quantity", "Qty", "quantity")));
-        position.setCostPrice(ReportUtils.parseBigDecimal(getValueByKeys(row, "Einstands Kurs", "Market Price", "Price", "market_price")));
-        position.setCostBasis(ReportUtils.parseBigDecimal(getValueByKeys(row, "Kostenbasis", "Market Price", "Price", "market_price")));
-        position.setClosingPrice(ReportUtils.parseBigDecimal(getValueByKeys(row, "Schlusskurs", "Market Value", "Value", "market_value")));
-        position.setValue(ReportUtils.parseBigDecimal(getValueByKeys(row, "Wert", "Market Value", "Value", "market_value")));
-        position.setWinLoss(ReportUtils.parseBigDecimal(getValueByKeys(row, "Unrealisierter G/V", "Unrealized P&L", "UnrealizedPnL", "unrealized_pnl")));
+        ReportUtils.getRowValue(row, QUANTITY).map(ReportUtils::parseBigDecimal).ifPresent(position::setQuantity);
+        ReportUtils.getRowValue(row, OPENING_PRICE).map(ReportUtils::parseBigDecimal).ifPresent(position::setOpeningPrice);
+        ReportUtils.getRowValue(row, COST_BASIS).map(ReportUtils::parseBigDecimal).ifPresent(position::setCostBasis);
+        ReportUtils.getRowValue(row, CLOSING_PRICE).map(ReportUtils::parseBigDecimal).ifPresent(position::setClosingPrice);
+        ReportUtils.getRowValue(row, VALUE).map(ReportUtils::parseBigDecimal).ifPresent(position::setValue);
+        ReportUtils.getRowValue(row, UNREALIZED_PNL).map(ReportUtils::parseBigDecimal).ifPresent(position::setWinLoss);
+        ReportUtils.getRowValue(row, CODE).ifPresent(position::setCode);
 
         return position;
     }
@@ -155,9 +152,9 @@ public class PortfolioDataService {
 
     private void processPerformanceSection(SectionData section, Map<String, Position> positions) {
         for (Map<String, String> row : section.getDataRows()) {
-            String symbol = getValueByKeys(row, "Symbol", "Ticker", "ISIN", "symbol");
-            if (symbol != null) {
-                Position position = positions.get(symbol);
+            Optional<String> symbol = ReportUtils.getRowValue(row, SYMBOL);
+            if (symbol.isPresent()) {
+                Position position = positions.get(symbol.get());
                 if (position != null) {
                     PerformanceData performance = createPerformanceFromRow(row);
                     position.setPerformance(performance);
@@ -201,7 +198,7 @@ public class PortfolioDataService {
     private void processDividendsSection(SectionData section, Map<String, Position> positions) {
         for (Map<String, String> row : section.getDataRows()) {
             Dividend dividend = createDividendFromRow(row);
-            if (dividend != null && dividend.getSymbol() != null) {
+            if (dividend.getSymbol() != null) {
                 Position position = positions.get(dividend.getSymbol());
                 if (position != null) {
                     position.addDividend(dividend);
@@ -220,10 +217,10 @@ public class PortfolioDataService {
 
         // Datum parsen
         String payDateStr = getValueByKeys(row, "Zahldatum", "Pay Date", "PayDate", "pay_date");
-        dividend.setPayDate(parseDate(payDateStr));
+        dividend.setPayDate(ReportUtils.parseLocalDateTime(payDateStr));
 
         String exDateStr = getValueByKeys(row, "Ex-Datum", "Ex Date", "ExDate", "ex_date");
-        dividend.setExDate(parseDate(exDateStr));
+        dividend.setExDate(ReportUtils.parseLocalDateTime(exDateStr));
 
         // Beträge
         dividend.setAmount(ReportUtils.parseBigDecimal(getValueByKeys(row, "Betrag", "Amount", "Gross Amount", "amount")));
@@ -256,8 +253,8 @@ public class PortfolioDataService {
 
             // Dividenden summieren
             BigDecimal positionDividends = position.getDividends().stream()
-                    .filter(d -> d.getNetAmount() != null)
                     .map(Dividend::getNetAmount)
+                    .filter(Objects::nonNull)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
             totalDividends = totalDividends.add(positionDividends);
         }
@@ -274,40 +271,6 @@ public class PortfolioDataService {
             String value = row.get(key);
             if (value != null && !value.trim().isEmpty()) {
                 return value.trim();
-            }
-        }
-        return null;
-    }
-
-    private LocalDateTime parseDateTime(String dateStr) {
-        if (dateStr == null || dateStr.trim().isEmpty()) {
-            return null;
-        }
-
-        for (DateTimeFormatter formatter : DATE_FORMATTERS) {
-            try {
-                if (formatter.toString().contains("HH:mm:ss")) {
-                    return LocalDateTime.parse(dateStr, formatter);
-                } else {
-                    return LocalDate.parse(dateStr, formatter).atStartOfDay();
-                }
-            } catch (DateTimeParseException ignored) {
-                // Versuche nächsten Formatter
-            }
-        }
-        return null;
-    }
-
-    private LocalDate parseDate(String dateStr) {
-        if (dateStr == null || dateStr.trim().isEmpty()) {
-            return null;
-        }
-
-        for (DateTimeFormatter formatter : DATE_FORMATTERS) {
-            try {
-                return LocalDate.parse(dateStr, formatter);
-            } catch (DateTimeParseException ignored) {
-                // Versuche nächsten Formatter
             }
         }
         return null;
