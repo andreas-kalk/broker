@@ -1,37 +1,36 @@
 import React, {useState} from 'react';
 import {
+    alpha,
     AppBar,
-    Toolbar,
-    Typography,
-    Button,
+    Avatar,
     Box,
+    Button,
+    Chip,
     Container,
-    IconButton,
+    Divider,
     Drawer,
+    IconButton,
     List,
     ListItem,
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    useTheme,
+    Toolbar,
+    Typography,
     useMediaQuery,
-    alpha,
-    Avatar,
-    Tooltip,
-    Divider,
-    Chip
+    useTheme
 } from '@mui/material';
 import {
-    Dashboard as DashboardIcon,
-    Assessment as TaxIcon,
-    Help as HelpIcon,
-    TableChart as DataIcon,
-    TrendingUp as TrendingUpIcon,
     AccountBalance as PortfolioIcon,
+    Assessment as TaxIcon,
+    Close as CloseIcon,
+    Dashboard as DashboardIcon,
+    Help as HelpIcon,
     Menu as MenuIcon,
-    Close as CloseIcon
+    TableChart as DataIcon,
+    TrendingUp as TransactionsIcon
 } from '@mui/icons-material';
-import {useNavigate, useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import LanguageSelector from './LanguageSelector';
 
@@ -48,174 +47,173 @@ const Navigation: React.FC = () => {
             label: t('nav.dashboard'),
             path: '/',
             icon: <DashboardIcon/>,
-            description: 'Overview',
             color: theme.palette.primary.main
         },
         {
-            label: 'Portfolio',
+            label: t('nav.portfolio'),
             path: '/portfolio',
             icon: <PortfolioIcon/>,
-            description: 'Holdings',
-            color: theme.palette.purple?.main || '#9c27b0'
+            color: theme.palette.secondary.main
         },
         {
-            label: 'Transactions',
+            label: t('nav.transactions'),
             path: '/transactions',
-            icon: <PortfolioIcon/>,
-            description: 'Transactions',
-            color: theme.palette.purple?.main || '#9c27b0'
-        },
-        {
-            label: t('nav.taxAnalysis'),
-            path: '/tax-analysis',
-            icon: <TaxIcon/>,
-            description: 'KAP Form',
+            icon: <TransactionsIcon/>,
             color: theme.palette.success.main
         },
         {
-            label: t('nav.dataExplorer'),
-            path: '/data-explorer',
-            icon: <DataIcon/>,
-            description: 'All Data',
+            label: t('nav.tax'),
+            path: '/tax-analysis',
+            icon: <TaxIcon/>,
             color: theme.palette.info.main
         },
         {
-            label: t('nav.optionsCalculator'),
-            path: '/options-calculator',
-            icon: <TrendingUpIcon/>,
-            description: 'Options',
-            color: theme.palette.secondary.main
+            label: t('nav.data'),
+            path: '/data-explorer',
+            icon: <DataIcon/>,
+            color: theme.palette.warning.main
         },
         {
             label: t('nav.help'),
             path: '/help',
             icon: <HelpIcon/>,
-            description: 'Documentation',
-            color: theme.palette.warning.main
+            color: theme.palette.grey[600]
         }
     ];
 
-    const isActive = (path: string) => {
-        return location.pathname === path;
-    };
+    const isActive = (path: string) => location.pathname === path;
 
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
+    const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
     const handleNavigation = (path: string) => {
         navigate(path);
-        if (isMobile) {
-            setMobileOpen(false);
-        }
+        if (isMobile) setMobileOpen(false);
     };
 
-    // Mobile Drawer Content
-    const drawer = (
-        <Box sx={{width: 280, height: '100%', bgcolor: 'background.paper'}}>
-            <Box
-                sx={{
-                    p: 3,
-                    background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.secondary.main} 100%)`,
-                    color: 'white',
-                    position: 'relative',
-                    overflow: 'hidden'
-                }}
-            >
-                <Box sx={{position: 'relative', zIndex: 1}}>
-                    <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
-                        <Box display="flex" alignItems="center">
-                            <Avatar
+    // Desktop Navigation
+    const renderDesktopNav = () => (
+        <Box display="flex" alignItems="center" gap={1}>
+            {navItems.map((item) => {
+                const active = isActive(item.path);
+                return (
+                    <Button
+                        key={item.path}
+                        onClick={() => navigate(item.path)}
+                        startIcon={item.icon}
+                        sx={{
+                            px: 2,
+                            py: 1,
+                            borderRadius: 2,
+                            textTransform: 'none',
+                            fontWeight: active ? 600 : 500,
+                            color: active ? item.color : theme.palette.text.primary,
+                            backgroundColor: active ? alpha(item.color, 0.1) : 'transparent',
+                            border: active ? `1px solid ${alpha(item.color, 0.2)}` : '1px solid transparent',
+                            '&:hover': {
+                                backgroundColor: alpha(item.color, 0.08),
+                                borderColor: alpha(item.color, 0.15),
+                            },
+                            transition: 'all 0.2s ease-in-out',
+                        }}
+                    >
+                        {item.label}
+                        {active && (
+                            <Chip
+                                size="small"
                                 sx={{
-                                    bgcolor: alpha('#fff', 0.2),
+                                    ml: 1,
+                                    height: 16,
+                                    fontSize: '0.6rem',
+                                    backgroundColor: item.color,
                                     color: 'white',
-                                    mr: 2,
-                                    width: 40,
-                                    height: 40
+                                    '& .MuiChip-label': {px: 0.5}
                                 }}
-                            >
-                                <TrendingUpIcon/>
-                            </Avatar>
-                            <Typography variant="h6" sx={{fontWeight: 'bold'}}>
-                                {t('nav.brandName')}
-                            </Typography>
-                        </Box>
-                        <IconButton
-                            onClick={handleDrawerToggle}
-                            sx={{color: 'white'}}
+                                label="●"
+                            />
+                        )}
+                    </Button>
+                );
+            })}
+        </Box>
+    );
+
+    // Mobile Drawer
+    const renderMobileDrawer = () => (
+        <Drawer
+            variant="temporary"
+            anchor="right"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{keepMounted: true}}
+            sx={{
+                display: {xs: 'block', md: 'none'},
+                '& .MuiDrawer-paper': {
+                    boxSizing: 'border-box',
+                    width: 280,
+                },
+            }}
+        >
+            <Box sx={{p: 3}}>
+                <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
+                    <Box display="flex" alignItems="center">
+                        <Avatar
+                            sx={{
+                                bgcolor: theme.palette.primary.main,
+                                mr: 2,
+                                width: 40,
+                                height: 40
+                            }}
                         >
-                            <CloseIcon/>
-                        </IconButton>
+                            <TransactionsIcon/>
+                        </Avatar>
+                        <Typography variant="h6" fontWeight="bold">
+                            {t('nav.brandName')}
+                        </Typography>
                     </Box>
-                    <Typography variant="body2" sx={{opacity: 0.9}}>
-                        Professional Broker Data Analysis
-                    </Typography>
+                    <IconButton onClick={handleDrawerToggle}>
+                        <CloseIcon/>
+                    </IconButton>
                 </Box>
 
-                {/* Background decoration */}
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: -20,
-                        right: -20,
-                        width: 100,
-                        height: 100,
-                        borderRadius: '50%',
-                        bgcolor: alpha('#fff', 0.1),
-                        zIndex: 0
-                    }}
-                />
-            </Box>
-
-            <List sx={{px: 2, py: 3}}>
-                {navItems.map((item) => {
-                    const active = isActive(item.path);
-                    return (
-                        <ListItem key={item.path} disablePadding sx={{mb: 1}}>
-                            <ListItemButton
-                                onClick={() => handleNavigation(item.path)}
-                                sx={{
-                                    borderRadius: 3,
-                                    py: 1.5,
-                                    px: 2,
-                                    backgroundColor: active ? alpha(item.color, 0.1) : 'transparent',
-                                    border: active ? `2px solid ${alpha(item.color, 0.3)}` : '2px solid transparent',
-                                    '&:hover': {
-                                        backgroundColor: alpha(item.color, 0.08),
-                                        border: `2px solid ${alpha(item.color, 0.2)}`,
-                                    }
-                                }}
-                            >
-                                <ListItemIcon
+                <List sx={{px: 0}}>
+                    {navItems.map((item) => {
+                        const active = isActive(item.path);
+                        return (
+                            <ListItem key={item.path} disablePadding sx={{mb: 1}}>
+                                <ListItemButton
+                                    onClick={() => handleNavigation(item.path)}
                                     sx={{
-                                        color: active ? item.color : theme.palette.text.secondary,
-                                        minWidth: 40
-                                    }}
-                                >
-                                    {item.icon}
-                                </ListItemIcon>
-                                <ListItemText
-                                    primary={item.label}
-                                    secondary={item.description}
-                                    sx={{
-                                        '& .MuiListItemText-primary': {
-                                            fontWeight: active ? 'bold' : 'medium',
-                                            color: active ? item.color : theme.palette.text.primary
+                                        borderRadius: 2,
+                                        backgroundColor: active ? alpha(item.color, 0.1) : 'transparent',
+                                        border: active ? `1px solid ${alpha(item.color, 0.2)}` : '1px solid transparent',
+                                        '&:hover': {
+                                            backgroundColor: alpha(item.color, 0.08),
+                                            borderColor: alpha(item.color, 0.15),
                                         }
                                     }}
-                                />
-                            </ListItemButton>
-                        </ListItem>
-                    );
-                })}
-            </List>
+                                >
+                                    <ListItemIcon sx={{color: active ? item.color : theme.palette.text.secondary}}>
+                                        {item.icon}
+                                    </ListItemIcon>
+                                    <ListItemText
+                                        primary={item.label}
+                                        sx={{
+                                            '& .MuiListItemText-primary': {
+                                                fontWeight: active ? 600 : 500,
+                                                color: active ? item.color : theme.palette.text.primary
+                                            }
+                                        }}
+                                    />
+                                </ListItemButton>
+                            </ListItem>
+                        );
+                    })}
+                </List>
 
-            <Divider sx={{mx: 2}}/>
-
-            <Box sx={{p: 2}}>
+                <Divider sx={{my: 2}}/>
                 <LanguageSelector/>
             </Box>
-        </Box>
+        </Drawer>
     );
 
     return (
@@ -224,63 +222,39 @@ const Navigation: React.FC = () => {
                 position="sticky"
                 elevation={0}
                 sx={{
-                    backgroundColor: alpha(theme.palette.background.paper, 0.95),
-                    backdropFilter: 'blur(20px)',
-                    borderBottom: `1px solid ${alpha(theme.palette.divider, 0.1)}`,
+                    backgroundColor: alpha(theme.palette.background.paper, 0.8),
+                    backdropFilter: 'blur(12px)',
+                    borderBottom: `1px solid ${theme.palette.divider}`,
                     color: theme.palette.text.primary
                 }}
             >
                 <Container maxWidth="xl">
-                    <Toolbar sx={{px: {xs: 0}, minHeight: {xs: 64, md: 70}}}>
-                        {/* Brand Logo */}
+                    <Toolbar sx={{px: {xs: 0}, minHeight: 64}}>
+                        {/* Brand */}
                         <Box
                             display="flex"
                             alignItems="center"
-                            sx={{
-                                mr: {xs: 2, md: 4},
-                                cursor: 'pointer',
-                                transition: 'transform 0.2s ease-in-out',
-                                '&:hover': {
-                                    transform: 'scale(1.02)'
-                                }
-                            }}
+                            sx={{mr: 4, cursor: 'pointer'}}
                             onClick={() => navigate('/')}
                         >
                             <Avatar
                                 sx={{
-                                    background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
+                                    bgcolor: theme.palette.primary.main,
                                     mr: 1.5,
-                                    width: {xs: 36, md: 40},
-                                    height: {xs: 36, md: 40},
-                                    boxShadow: `0 4px 20px ${alpha(theme.palette.primary.main, 0.3)}`
+                                    width: 36,
+                                    height: 36,
                                 }}
                             >
-                                <TrendingUpIcon sx={{fontSize: {xs: 20, md: 24}}}/>
+                                <TransactionsIcon/>
                             </Avatar>
-
                             <Box>
-                                <Typography
-                                    variant="h6"
-                                    component="div"
-                                    sx={{
-                                        fontWeight: 'bold',
-                                        fontSize: {xs: '1.1rem', md: '1.25rem'},
-                                        background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                                        backgroundClip: 'text',
-                                        WebkitBackgroundClip: 'text',
-                                        WebkitTextFillColor: 'transparent',
-                                        lineHeight: 1.2
-                                    }}
-                                >
+                                <Typography variant="h6" fontWeight="bold" sx={{lineHeight: 1.2}}>
                                     {t('nav.brandName')}
                                 </Typography>
                                 <Typography
                                     variant="caption"
-                                    sx={{
-                                        color: theme.palette.text.secondary,
-                                        fontSize: '0.7rem',
-                                        display: {xs: 'none', sm: 'block'}
-                                    }}
+                                    color="text.secondary"
+                                    sx={{display: {xs: 'none', sm: 'block'}}}
                                 >
                                     Professional Analytics
                                 </Typography>
@@ -291,87 +265,9 @@ const Navigation: React.FC = () => {
 
                         {/* Desktop Navigation */}
                         {!isMobile && (
-                            <Box display="flex" alignItems="center" gap={1}>
-                                {navItems.map((item) => {
-                                    const active = isActive(item.path);
-                                    return (
-                                        <Tooltip key={item.path} title={item.description} arrow>
-                                            <Button
-                                                onClick={() => navigate(item.path)}
-                                                startIcon={item.icon}
-                                                sx={{
-                                                    minWidth: 'auto',
-                                                    px: 2.5,
-                                                    py: 1,
-                                                    borderRadius: 3,
-                                                    textTransform: 'none',
-                                                    fontWeight: active ? 'bold' : 'medium',
-                                                    fontSize: '0.875rem',
-                                                    color: active ? item.color : theme.palette.text.primary,
-                                                    backgroundColor: active
-                                                        ? alpha(item.color, 0.1)
-                                                        : 'transparent',
-                                                    border: active
-                                                        ? `2px solid ${alpha(item.color, 0.2)}`
-                                                        : '2px solid transparent',
-                                                    '&:hover': {
-                                                        backgroundColor: alpha(item.color, 0.08),
-                                                        border: `2px solid ${alpha(item.color, 0.15)}`,
-                                                        transform: 'translateY(-1px)',
-                                                        boxShadow: `0 4px 12px ${alpha(item.color, 0.2)}`
-                                                    },
-                                                    transition: 'all 0.2s ease-in-out',
-                                                    position: 'relative',
-                                                    overflow: 'hidden'
-                                                }}
-                                            >
-                                                <Box
-                                                    sx={{
-                                                        position: 'absolute',
-                                                        top: 0,
-                                                        left: 0,
-                                                        right: 0,
-                                                        height: 2,
-                                                        background: active
-                                                            ? `linear-gradient(90deg, ${item.color}, ${alpha(item.color, 0.5)})`
-                                                            : 'transparent',
-                                                        borderRadius: '2px 2px 0 0'
-                                                    }}
-                                                />
-                                                {item.label}
-                                                {active && (
-                                                    <Chip
-                                                        label="●"
-                                                        size="small"
-                                                        sx={{
-                                                            ml: 1,
-                                                            height: 16,
-                                                            minWidth: 16,
-                                                            '& .MuiChip-label': {
-                                                                px: 0,
-                                                                fontSize: '0.6rem',
-                                                                color: item.color
-                                                            },
-                                                            bgcolor: 'transparent'
-                                                        }}
-                                                    />
-                                                )}
-                                            </Button>
-                                        </Tooltip>
-                                    );
-                                })}
-
-                                <Divider
-                                    orientation="vertical"
-                                    flexItem
-                                    sx={{
-                                        mx: 2,
-                                        bgcolor: alpha(theme.palette.divider, 0.3),
-                                        height: 30,
-                                        alignSelf: 'center'
-                                    }}
-                                />
-
+                            <Box display="flex" alignItems="center" gap={2}>
+                                {renderDesktopNav()}
+                                <Divider orientation="vertical" flexItem sx={{mx: 1, height: 30}}/>
                                 <LanguageSelector/>
                             </Box>
                         )}
@@ -379,13 +275,9 @@ const Navigation: React.FC = () => {
                         {/* Mobile Menu Button */}
                         {isMobile && (
                             <IconButton
-                                color="primary"
-                                aria-label="open drawer"
-                                edge="start"
                                 onClick={handleDrawerToggle}
                                 sx={{
                                     borderRadius: 2,
-                                    p: 1,
                                     bgcolor: alpha(theme.palette.primary.main, 0.1),
                                     '&:hover': {
                                         bgcolor: alpha(theme.palette.primary.main, 0.2),
@@ -399,26 +291,7 @@ const Navigation: React.FC = () => {
                 </Container>
             </AppBar>
 
-            {/* Mobile Drawer */}
-            <Drawer
-                variant="temporary"
-                anchor="right"
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-                ModalProps={{
-                    keepMounted: true, // Better open performance on mobile.
-                }}
-                sx={{
-                    display: {xs: 'block', md: 'none'},
-                    '& .MuiDrawer-paper': {
-                        boxSizing: 'border-box',
-                        width: 280,
-                        boxShadow: theme.shadows[8]
-                    },
-                }}
-            >
-                {drawer}
-            </Drawer>
+            {renderMobileDrawer()}
         </>
     );
 };

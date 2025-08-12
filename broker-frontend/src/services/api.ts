@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
-import {ReportSummary, SectionData, Portfolio, PortfolioSummary, Position, Transaction, Dividend} from '../types/api';
+import {Dividend, Portfolio, PortfolioSummary, Position, ReportSummary, SectionData, Transaction} from '../types/api';
 import {TaxRelevantData} from '../types/tax';
 import {APP_CONFIG} from '../config/constants';
 

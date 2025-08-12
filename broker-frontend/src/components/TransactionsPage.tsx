@@ -1,43 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+  Alert,
+  alpha,
+  Avatar,
   Box,
-  Typography,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Collapse,
+  FormControl,
+  Grid,
+  IconButton,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Chip,
-  Card,
-  CardContent,
-  Grid,
   Tabs,
-  Tab,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Button,
-  CircularProgress,
-  Alert,
-  IconButton,
-  Collapse
+  Typography,
+  useTheme
 } from '@mui/material';
-import {
-  ExpandMore as ExpandMoreIcon,
-  TrendingUp,
-  TrendingDown,
-  Assessment,
-  AccountBalance
-} from '@mui/icons-material';
-import { useTranslation } from 'react-i18next';
-import { transactionService, type SymbolTransactions, type TransactionSummary } from '../services/api';
-import { Transaction } from '../types/api';
+import {AccountBalance, Analytics, Assessment, Euro, ExpandMore as ExpandMoreIcon, TrendingDown, TrendingUp} from '@mui/icons-material';
+import {useTranslation} from 'react-i18next';
+import {type SymbolTransactions, transactionService, type TransactionSummary} from '../services/api';
+import {Transaction} from '../types/api';
 
 const TransactionsPage: React.FC = () => {
   const { t } = useTranslation();
+  const theme = useTheme();
   const [transactions, setTransactions] = useState<SymbolTransactions[]>([]);
   const [transactionsByAssetKey, setTransactionsByAssetKey] = useState<Record<string, SymbolTransactions>>({});
   const [transactionsBySymbol, setTransactionsBySymbol] = useState<Record<string, SymbolTransactions>>({});
@@ -117,149 +115,155 @@ const TransactionsPage: React.FC = () => {
     setExpandedCards(newExpanded);
   };
 
+  const renderHeader = () => (
+    <Box sx={{ mb: 4 }}>
+      <Typography variant="h4" fontWeight="bold" gutterBottom>
+        {t('nav.transactions')}
+      </Typography>
+      <Typography variant="body1" color="text.secondary">
+        Transaktionsanalyse und Performance-Übersicht
+      </Typography>
+    </Box>
+  );
+
   const renderSummaryCards = () => {
     if (!transactionSummary) return null;
 
+    const summaryData = [
+      {
+        title: 'Symbole',
+        value: transactionSummary.totalSymbols,
+        subtitle: `${transactionSummary.totalTransactions} Transaktionen`,
+        icon: <Assessment />,
+        color: theme.palette.primary.main
+      },
+      {
+        title: 'Erlöse',
+        value: formatCurrency(transactionSummary.totalProceeds),
+        subtitle: 'Gesamterlöse',
+        icon: <TrendingUp />,
+        color: theme.palette.success.main
+      },
+      {
+        title: 'Gebühren',
+        value: formatCurrency(transactionSummary.totalFees),
+        subtitle: 'Gesamtgebühren',
+        icon: <TrendingDown />,
+        color: theme.palette.error.main
+      },
+      {
+        title: 'Realisiert P&L',
+        value: formatCurrency(transactionSummary.totalRealizedPnL),
+        subtitle: 'Nettoergebnis',
+        icon: <Euro />,
+        color: transactionSummary.totalRealizedPnL >= 0 ? theme.palette.success.main : theme.palette.error.main
+      }
+    ];
+
     return (
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center" mb={1}>
-                <Assessment sx={{ color: 'primary.main', mr: 1 }} />
-                <Typography variant="h6" color="primary">
-                  Symbole
+        {summaryData.map((item, index) => (
+          <Grid item xs={12} sm={6} md={3} key={index}>
+            <Card sx={{ height: '100%' }}>
+              <CardContent>
+                <Box display="flex" alignItems="center" mb={2}>
+                  <Avatar
+                    sx={{
+                      bgcolor: alpha(item.color, 0.1),
+                      color: item.color,
+                      mr: 2,
+                      width: 48,
+                      height: 48
+                    }}
+                  >
+                    {item.icon}
+                  </Avatar>
+                  <Box>
+                    <Typography variant="h5" fontWeight="bold" color={item.color}>
+                      {item.value}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.title}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography variant="caption" color="text.secondary">
+                  {item.subtitle}
                 </Typography>
-              </Box>
-              <Typography variant="h3" fontWeight="bold">
-                {transactionSummary.totalSymbols}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {transactionSummary.totalTransactions} Transaktionen
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center" mb={1}>
-                <TrendingUp sx={{ color: 'success.main', mr: 1 }} />
-                <Typography variant="h6" color="success.main">
-                  Erlöse
-                </Typography>
-              </Box>
-              <Typography variant="h3" fontWeight="bold" color="success.main">
-                {formatCurrency(transactionSummary.totalProceeds)}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center" mb={1}>
-                <TrendingDown sx={{ color: 'error.main', mr: 1 }} />
-                <Typography variant="h6" color="error.main">
-                  Gebühren
-                </Typography>
-              </Box>
-              <Typography variant="h3" fontWeight="bold" color="error.main">
-                {formatCurrency(transactionSummary.totalFees)}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center" mb={1}>
-                <AccountBalance sx={{
-                  color: transactionSummary.totalRealizedPnL >= 0 ? 'success.main' : 'error.main',
-                  mr: 1
-                }} />
-                <Typography variant="h6" color={transactionSummary.totalRealizedPnL >= 0 ? 'success.main' : 'error.main'}>
-                  Realisiert P&L
-                </Typography>
-              </Box>
-              <Typography
-                variant="h3"
-                fontWeight="bold"
-                color={transactionSummary.totalRealizedPnL >= 0 ? 'success.main' : 'error.main'}
-              >
-                {formatCurrency(transactionSummary.totalRealizedPnL)}
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
     );
   };
 
   const renderTransactionTable = (symbolTransactions: SymbolTransactions[]) => (
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Symbol</TableCell>
-            <TableCell>Asset-Typ</TableCell>
-            <TableCell align="right">Transaktionen</TableCell>
-            <TableCell align="right">Erlöse</TableCell>
-            <TableCell align="right">Gebühren</TableCell>
-            <TableCell align="right">Realisiert P&L</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {symbolTransactions.map((st, index) => (
-            <TableRow key={index} hover>
-              <TableCell>
-                <Box>
-                  <Typography variant="body2" fontWeight="bold">
-                    {st.asset?.symbol}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    {st.asset?.key}
-                  </Typography>
-                </Box>
-              </TableCell>
-              <TableCell>
-                <Chip
-                  label={getAssetTypeLabel(st.asset?.category || '')}
-                  color={getAssetTypeColor(st.asset?.category || '')}
-                  size="small"
-                />
-              </TableCell>
-              <TableCell align="right">
-                <Typography variant="body2" fontWeight="bold">
-                  {st.transactions?.length || 0}
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography color="success.main">
-                  {formatCurrency(st.sumProceeds || 0, st.currency)}
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography color="error.main">
-                  {formatCurrency(st.sumFees || 0, st.currency)}
-                </Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Typography
-                  color={(st.sumRealizedPnL || 0) >= 0 ? 'success.main' : 'error.main'}
-                  fontWeight="bold"
-                >
-                  {formatCurrency(st.sumRealizedPnL || 0, st.currency)}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Card>
+      <CardContent sx={{ p: 0 }}>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Symbol</TableCell>
+                <TableCell>Asset-Typ</TableCell>
+                <TableCell align="right">Transaktionen</TableCell>
+                <TableCell align="right">Erlöse</TableCell>
+                <TableCell align="right">Gebühren</TableCell>
+                <TableCell align="right">Realisiert P&L</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {symbolTransactions.map((st, index) => (
+                <TableRow key={index} hover>
+                  <TableCell>
+                    <Box>
+                      <Typography variant="body2" fontWeight="600">
+                        {st.asset?.symbol}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {st.asset?.key}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={getAssetTypeLabel(st.asset?.category || '')}
+                      color={getAssetTypeColor(st.asset?.category || '')}
+                      size="small"
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Typography variant="body2" fontWeight="600">
+                      {st.transactions?.length || 0}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Typography color="success.main" fontWeight="500">
+                      {formatCurrency(st.sumProceeds || 0, st.currency)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Typography color="error.main" fontWeight="500">
+                      {formatCurrency(st.sumFees || 0, st.currency)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Typography
+                      color={(st.sumRealizedPnL || 0) >= 0 ? 'success.main' : 'error.main'}
+                      fontWeight="600"
+                    >
+                      {formatCurrency(st.sumRealizedPnL || 0, st.currency)}
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </CardContent>
+    </Card>
   );
 
   const renderGroupedTransactions = () => {
@@ -279,117 +283,154 @@ const TransactionsPage: React.FC = () => {
               <MenuItem value="assetKey">Nach Asset-Key</MenuItem>
             </Select>
           </FormControl>
-          <Typography variant="body2" color="text.secondary">
-            {Object.keys(data).length} Gruppen gefunden
-          </Typography>
+          <Chip
+            label={`${Object.keys(data).length} Gruppen`}
+            color="primary"
+            variant="outlined"
+            size="small"
+          />
         </Box>
 
-        {Object.entries(data).map(([key, symbolTransactions]) => {
-          const isExpanded = expandedCards.has(key);
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {Object.entries(data).map(([key, symbolTransactions]) => {
+            const isExpanded = expandedCards.has(key);
 
-          return (
-            <Card key={key} sx={{ mb: 2 }}>
-              <CardContent>
-                <Box display="flex" alignItems="center" justifyContent="space-between">
-                  <Box>
-                    <Typography variant="h6" gutterBottom>
-                      {key}
-                    </Typography>
-                    <Box display="flex" gap={2} alignItems="center">
-                      <Chip
-                        label={getAssetTypeLabel(symbolTransactions.asset?.category || '')}
-                        color={getAssetTypeColor(symbolTransactions.asset?.category || '')}
-                        size="small"
-                      />
-                      <Typography variant="body2" color="text.secondary">
-                        {symbolTransactions.transactions?.length || 0} Transaktionen
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Box display="flex" alignItems="center" gap={2}>
-                    <Box textAlign="right">
-                      <Typography variant="body2" color="text.secondary">
-                        Realisiert P&L
-                      </Typography>
-                      <Typography
-                        variant="h6"
-                        color={(symbolTransactions.sumRealizedPnL || 0) >= 0 ? 'success.main' : 'error.main'}
-                        fontWeight="bold"
+            return (
+              <Card key={key}>
+                <CardContent>
+                  <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Avatar
+                        sx={{
+                          bgcolor: alpha(getAssetTypeColor(symbolTransactions.asset?.category || '') === 'primary'
+                            ? theme.palette.primary.main
+                            : theme.palette.secondary.main, 0.1),
+                          color: getAssetTypeColor(symbolTransactions.asset?.category || '') === 'primary'
+                            ? theme.palette.primary.main
+                            : theme.palette.secondary.main,
+                          width: 40,
+                          height: 40
+                        }}
                       >
-                        {formatCurrency(symbolTransactions.sumRealizedPnL || 0, symbolTransactions.currency)}
-                      </Typography>
+                        {getAssetTypeColor(symbolTransactions.asset?.category || '') === 'primary'
+                          ? <AccountBalance />
+                          : <Analytics />}
+                      </Avatar>
+                      <Box>
+                        <Typography variant="h6" fontWeight="bold">
+                          {key}
+                        </Typography>
+                        <Box display="flex" gap={1} alignItems="center">
+                          <Chip
+                            label={getAssetTypeLabel(symbolTransactions.asset?.category || '')}
+                            color={getAssetTypeColor(symbolTransactions.asset?.category || '')}
+                            size="small"
+                            variant="outlined"
+                          />
+                          <Typography variant="caption" color="text.secondary">
+                            {symbolTransactions.transactions?.length || 0} Transaktionen
+                          </Typography>
+                        </Box>
+                      </Box>
                     </Box>
-                    <IconButton
-                      onClick={() => toggleCardExpansion(key)}
-                      sx={{
-                        transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                        transition: 'transform 0.3s',
-                      }}
-                    >
-                      <ExpandMoreIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
 
-                <Collapse in={isExpanded}>
-                  <Box mt={3}>
-                    <TableContainer>
-                      <Table size="small">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Datum</TableCell>
-                            <TableCell align="right">Menge</TableCell>
-                            <TableCell align="right">Preis</TableCell>
-                            <TableCell align="right">Erlöse</TableCell>
-                            <TableCell align="right">Gebühren</TableCell>
-                            <TableCell align="right">Realisiert P&L</TableCell>
-                            <TableCell>Code</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {symbolTransactions.transactions?.map((transaction: Transaction, index: number) => (
-                            <TableRow key={index}>
-                              <TableCell>
-                                {formatDate(transaction.dateTime)}
-                              </TableCell>
-                              <TableCell align="right">
-                                {transaction.quantity?.toFixed(2)}
-                              </TableCell>
-                              <TableCell align="right">
-                                {formatCurrency(transaction.price, transaction.currency)}
-                              </TableCell>
-                              <TableCell align="right">
-                                <Typography color="success.main">
-                                  {formatCurrency(transaction.proceeds, transaction.currency)}
-                                </Typography>
-                              </TableCell>
-                              <TableCell align="right">
-                                <Typography color="error.main">
-                                  {formatCurrency(transaction.fees, transaction.currency)}
-                                </Typography>
-                              </TableCell>
-                              <TableCell align="right">
-                                <Typography
-                                  color={transaction.realizedPnL >= 0 ? 'success.main' : 'error.main'}
-                                  fontWeight="bold"
-                                >
-                                  {formatCurrency(transaction.realizedPnL, transaction.currency)}
-                                </Typography>
-                              </TableCell>
-                              <TableCell>
-                                <Chip label={transaction.code} size="small" variant="outlined" />
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
+                    <Box display="flex" alignItems="center" gap={2}>
+                      <Box textAlign="right">
+                        <Typography variant="body2" color="text.secondary">
+                          Realisiert P&L
+                        </Typography>
+                        <Typography
+                          variant="h6"
+                          color={(symbolTransactions.sumRealizedPnL || 0) >= 0 ? 'success.main' : 'error.main'}
+                          fontWeight="bold"
+                        >
+                          {formatCurrency(symbolTransactions.sumRealizedPnL || 0, symbolTransactions.currency)}
+                        </Typography>
+                      </Box>
+                      <IconButton
+                        onClick={() => toggleCardExpansion(key)}
+                        sx={{
+                          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                          transition: 'transform 0.3s',
+                        }}
+                      >
+                        <ExpandMoreIcon />
+                      </IconButton>
+                    </Box>
                   </Box>
-                </Collapse>
-              </CardContent>
-            </Card>
-          );
-        })}
+
+                  <Collapse in={isExpanded}>
+                    <Box mt={2}>
+                      <TableContainer component={Paper} variant="outlined">
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Datum</TableCell>
+                              <TableCell align="right">Menge</TableCell>
+                              <TableCell align="right">Preis</TableCell>
+                              <TableCell align="right">Erlöse</TableCell>
+                              <TableCell align="right">Gebühren</TableCell>
+                              <TableCell align="right">Realisiert P&L</TableCell>
+                              <TableCell>Code</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {symbolTransactions.transactions?.map((transaction: Transaction, index: number) => (
+                              <TableRow key={index} hover>
+                                <TableCell>
+                                  <Typography variant="caption">
+                                    {formatDate(transaction.dateTime)}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Typography variant="body2">
+                                    {transaction.quantity?.toFixed(2)}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Typography variant="body2">
+                                    {formatCurrency(transaction.price, transaction.currency)}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Typography color="success.main" variant="body2">
+                                    {formatCurrency(transaction.proceeds, transaction.currency)}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Typography color="error.main" variant="body2">
+                                    {formatCurrency(transaction.fees, transaction.currency)}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Typography
+                                    color={transaction.realizedPnL >= 0 ? 'success.main' : 'error.main'}
+                                    fontWeight="500"
+                                    variant="body2"
+                                  >
+                                    {formatCurrency(transaction.realizedPnL, transaction.currency)}
+                                  </Typography>
+                                </TableCell>
+                                <TableCell>
+                                  <Chip
+                                    label={transaction.code}
+                                    size="small"
+                                    variant="outlined"
+                                    sx={{ fontSize: '0.7rem' }}
+                                  />
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Box>
+                  </Collapse>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </Box>
       </Box>
     );
   };
@@ -404,7 +445,7 @@ const TransactionsPage: React.FC = () => {
 
   if (error) {
     return (
-      <Alert severity="error" sx={{ mt: 2 }}>
+      <Alert severity="error" sx={{ m: 3 }}>
         {error}
         <Button onClick={loadTransactionData} sx={{ ml: 2 }}>
           Wiederholen
@@ -415,22 +456,19 @@ const TransactionsPage: React.FC = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Transaktionen
-      </Typography>
-
+      {renderHeader()}
       {renderSummaryCards()}
 
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>
+      <Card sx={{ mb: 3 }}>
+        <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)} sx={{ px: 2, pt: 1 }}>
           <Tab label="Übersicht" />
           <Tab label="Detailliert" />
         </Tabs>
-      </Box>
+      </Card>
 
       {tabValue === 0 && (
         <Box>
-          <Typography variant="h6" gutterBottom>
+          <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ mb: 2 }}>
             Transaktionen nach Assets
           </Typography>
           {renderTransactionTable(transactions)}

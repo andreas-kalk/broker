@@ -26,19 +26,23 @@ export interface Position {
     performance: PerformanceData;
 }
 
+export interface Asset {
+    key: string
+    symbol: string
+    category: string
+}
+
 export interface Transaction {
-    symbol: string;
-    description: string;
+    asset: Asset;
+    currency: string;
     dateTime: string;
-    action: string;
     quantity: number;
     price: number;
     proceeds: number;
-    commission: number;
-    currency: string;
-    exchange: string;
-    orderId: string;
-    transactionId: string;
+    fees: number;
+    subTotal: number;
+    realizedPnL: number;
+    code: string;
 }
 
 export interface Dividend {
