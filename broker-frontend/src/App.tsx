@@ -9,6 +9,7 @@ import TaxAnalysis from './components/TaxAnalysis';
 import CodesAndHelp from './components/CodesAndHelp';
 import SectionDetail from './components/SectionDetail';
 import OptionsCalculator from './components/OptionsCalculator';
+import PortfolioPage from './components/PortfolioPage';
 import {brokerTheme} from './theme/brokerTheme';
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
                             <Route path="/tax-analysis" element={<TaxAnalysis/>}/>
                             <Route path="/help" element={<CodesAndHelp/>}/>
                             <Route path="/options-calculator" element={<OptionsCalculator/>}/>
+                            <Route path="/portfolio" element={<PortfolioPage/>}/>
                             <Route path="/section/:sectionName" element={<SectionDetail/>}/>
                         </Routes>
                     </Container>

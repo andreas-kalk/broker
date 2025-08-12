@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
-import {ReportSummary, SectionData} from '../types/api';
+import {ReportSummary, SectionData, Portfolio, PortfolioSummary, Position, Transaction, Dividend} from '../types/api';
 import {TaxRelevantData} from '../types/tax';
 import {APP_CONFIG} from '../config/constants';
 
@@ -56,6 +56,32 @@ export const reportService = {
 export const taxService = {
     async getTaxRelevantData(taxYear: number = APP_CONFIG.TAX.DEFAULT_YEAR): Promise<TaxRelevantData> {
         return api.get(`/reports/tax-data?taxYear=${taxYear}`).then(extractData);
+    },
+} as const;
+
+export const portfolioService = {
+    async getPortfolio(): Promise<Portfolio> {
+        return api.get('/reports/portfolio').then(extractData);
+    },
+
+    async getPortfolioSummary(): Promise<PortfolioSummary> {
+        return api.get('/reports/portfolio/summary').then(extractData);
+    },
+
+    async getPositions(): Promise<Position[]> {
+        return api.get('/reports/portfolio/positions').then(extractData);
+    },
+
+    async getPosition(symbol: string): Promise<Position> {
+        return api.get(`/reports/portfolio/positions/${symbol}`).then(extractData);
+    },
+
+    async getPositionTransactions(symbol: string): Promise<Transaction[]> {
+        return api.get(`/reports/portfolio/positions/${symbol}/transactions`).then(extractData);
+    },
+
+    async getPositionDividends(symbol: string): Promise<Dividend[]> {
+        return api.get(`/reports/portfolio/positions/${symbol}/dividends`).then(extractData);
     },
 } as const;
 
