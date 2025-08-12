@@ -129,4 +129,164 @@ public class TransactionDataService {
 
         return transaction;
     }
+
+    /**
+     * Extrahiert alle Transaktionen für ein bestimmtes Steuerjahr
+     *
+     * @param report das Report-Objekt
+     * @param taxYear das Steuerjahr
+     * @return Liste aller Transaktionen
+     */
+    public List<Transaction> extractTransactions(Report report, int taxYear) {
+        List<SymbolTransactions> symbolTransactions = processTransactions(report);
+        return symbolTransactions.stream()
+            .flatMap(st -> st.getTransactions().stream())
+            .filter(transaction -> transaction.getDateTime() != null &&
+                    transaction.getDateTime().getYear() == taxYear)
+            .sorted((t1, t2) -> t1.getDateTime().compareTo(t2.getDateTime()))
+            .collect(java.util.stream.Collectors.toList());
+    }
+
+    /**
+     * Extrahiert alle Transaktionen ohne Jahresfilter
+     *
+     * @param report das Report-Objekt
+     * @return Liste aller Transaktionen
+     */
+    public List<Transaction> extractAllTransactions(Report report) {
+        List<SymbolTransactions> symbolTransactions = processTransactions(report);
+        return symbolTransactions.stream()
+            .flatMap(st -> st.getTransactions().stream())
+            .sorted((t1, t2) -> {
+                if (t1.getDateTime() == null && t2.getDateTime() == null) return 0;
+                if (t1.getDateTime() == null) return 1;
+                if (t2.getDateTime() == null) return -1;
+                return t1.getDateTime().compareTo(t2.getDateTime());
+            })
+            .collect(java.util.stream.Collectors.toList());
+    }
+
+    /**
+     * Gruppiert Transaktionen nach Asset-Key
+     *
+     * @param report das Report-Objekt
+     * @return Map mit Asset-Key als Schlüssel und SymbolTransactions als Wert
+     */
+    public Map<String, SymbolTransactions> getTransactionsByAssetKey(Report report) {
+        List<SymbolTransactions> symbolTransactions = processTransactions(report);
+        Map<String, SymbolTransactions> result = new HashMap<>();
+
+        for (SymbolTransactions st : symbolTransactions) {
+            if (st.getAsset() != null) {
+                result.put(st.getAsset().getKey(), st);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Gruppiert Transaktionen nach Symbol
+     *
+     * @param report das Report-Objekt
+     * @return Map mit Symbol als Schlüssel und SymbolTransactions als Wert
+     */
+    public Map<String, SymbolTransactions> getTransactionsBySymbol(Report report) {
+        List<SymbolTransactions> symbolTransactions = processTransactions(report);
+        Map<String, SymbolTransactions> result = new HashMap<>();
+
+        for (SymbolTransactions st : symbolTransactions) {
+            if (st.getAsset() != null) {
+                result.put(st.getAsset().getSymbol(), st);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Gibt eine spezifische Transaktion basierend auf einer ID zurück
+     *
+     * @param report das Report-Objekt
+     * @param transactionId die Transaktions-ID (Symbol + DateTime)
+     * @return die Transaktion oder null wenn nicht gefunden
+     */
+    public Transaction getTransactionById(Report report, String transactionId) {
+        List<SymbolTransactions> symbolTransactions = processTransactions(report);
+        return symbolTransactions.stream()
+            .flatMap(st -> st.getTransactions().stream())
+            .filter(transaction -> generateTransactionId(transaction).equals(transactionId))
+            .findFirst()
+            .orElse(null);
+    }
+
+    /**
+     * Erstellt eine Zusammenfassung der Transaktionsdaten
+     *
+     * @param report das Report-Objekt
+     * @return TransactionSummary mit aggregierten Daten
+     */
+    public TransactionSummary getTransactionSummary(Report report) {
+        List<SymbolTransactions> symbolTransactions = processTransactions(report);
+
+        TransactionSummary summary = new TransactionSummary();
+        summary.setTotalSymbols(symbolTransactions.size());
+
+        double totalProceeds = symbolTransactions.stream()
+            .mapToDouble(st -> st.getSumProceeds() != null ? st.getSumProceeds().doubleValue() : 0.0)
+            .sum();
+        summary.setTotalProceeds(java.math.BigDecimal.valueOf(totalProceeds));
+
+        double totalFees = symbolTransactions.stream()
+            .mapToDouble(st -> st.getSumFees() != null ? st.getSumFees().doubleValue() : 0.0)
+            .sum();
+        summary.setTotalFees(java.math.BigDecimal.valueOf(totalFees));
+
+        double totalRealizedPnL = symbolTransactions.stream()
+            .mapToDouble(st -> st.getSumRealizedPnL() != null ? st.getSumRealizedPnL().doubleValue() : 0.0)
+            .sum();
+        summary.setTotalRealizedPnL(java.math.BigDecimal.valueOf(totalRealizedPnL));
+
+        int totalTransactions = symbolTransactions.stream()
+            .mapToInt(st -> st.getTransactions() != null ? st.getTransactions().size() : 0)
+            .sum();
+        summary.setTotalTransactions(totalTransactions);
+
+        return summary;
+    }
+
+    /**
+     * Generiert eine eindeutige ID für eine Transaktion
+     */
+    private String generateTransactionId(Transaction transaction) {
+        if (transaction.getAsset() != null && transaction.getDateTime() != null) {
+            return transaction.getAsset().getSymbol() + "_" + transaction.getDateTime().toString();
+        }
+        return "";
+    }
+
+    // Inner class for transaction summary
+    public static class TransactionSummary {
+        private int totalSymbols;
+        private int totalTransactions;
+        private java.math.BigDecimal totalProceeds;
+        private java.math.BigDecimal totalFees;
+        private java.math.BigDecimal totalRealizedPnL;
+
+        // Getters and Setters
+        public int getTotalSymbols() { return totalSymbols; }
+        public void setTotalSymbols(int totalSymbols) { this.totalSymbols = totalSymbols; }
+
+        public int getTotalTransactions() { return totalTransactions; }
+        public void setTotalTransactions(int totalTransactions) { this.totalTransactions = totalTransactions; }
+
+        public java.math.BigDecimal getTotalProceeds() { return totalProceeds; }
+        public void setTotalProceeds(java.math.BigDecimal totalProceeds) { this.totalProceeds = totalProceeds; }
+
+        public java.math.BigDecimal getTotalFees() { return totalFees; }
+        public void setTotalFees(java.math.BigDecimal totalFees) { this.totalFees = totalFees; }
+
+        public java.math.BigDecimal getTotalRealizedPnL() { return totalRealizedPnL; }
+        public void setTotalRealizedPnL(java.math.BigDecimal totalRealizedPnL) { this.totalRealizedPnL = totalRealizedPnL; }
+    }
 }

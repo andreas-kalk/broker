@@ -59,6 +59,13 @@ const Navigation: React.FC = () => {
             color: theme.palette.purple?.main || '#9c27b0'
         },
         {
+            label: 'Transactions',
+            path: '/transactions',
+            icon: <PortfolioIcon/>,
+            description: 'Transactions',
+            color: theme.palette.purple?.main || '#9c27b0'
+        },
+        {
             label: t('nav.taxAnalysis'),
             path: '/tax-analysis',
             icon: <TaxIcon/>,

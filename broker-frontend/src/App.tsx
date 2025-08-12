@@ -10,6 +10,7 @@ import CodesAndHelp from './components/CodesAndHelp';
 import SectionDetail from './components/SectionDetail';
 import OptionsCalculator from './components/OptionsCalculator';
 import PortfolioPage from './components/PortfolioPage';
+import TransactionsPage from './components/TransactionsPage';
 import {brokerTheme} from './theme/brokerTheme';
 
 function App() {
@@ -29,11 +30,12 @@ function App() {
                     >
                         <Routes>
                             <Route path="/" element={<Dashboard/>}/>
-                            <Route path="/data-explorer" element={<DataExplorer/>}/>
+                            <Route path="/portfolio" element={<PortfolioPage/>}/>
+                            <Route path="/transactions" element={<TransactionsPage/>}/>
                             <Route path="/tax-analysis" element={<TaxAnalysis/>}/>
+                            <Route path="/data-explorer" element={<DataExplorer/>}/>
                             <Route path="/help" element={<CodesAndHelp/>}/>
                             <Route path="/options-calculator" element={<OptionsCalculator/>}/>
-                            <Route path="/portfolio" element={<PortfolioPage/>}/>
                             <Route path="/section/:sectionName" element={<SectionDetail/>}/>
                         </Routes>
                     </Container>

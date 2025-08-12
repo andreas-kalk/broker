@@ -6,6 +6,7 @@ import com.kalk.broker.backend.exception.FileProcessingException;
 import com.kalk.broker.backend.pojo.*;
 import com.kalk.broker.backend.service.TaxDataService;
 import com.kalk.broker.backend.service.PortfolioDataService;
+import com.kalk.broker.backend.service.TransactionDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,17 @@ public class ReportController {
     private final FileImporter fileImporter;
     private final TaxDataService taxRelevantDataService;
     private final PortfolioDataService portfolioDataService;
+    private final TransactionDataService transactionDataService;
 
     private String currentFileName = AppConstants.DEFAULT_FILE_NAME;
 
     @Autowired
-    public ReportController(FileImporter fileImporter, TaxDataService taxRelevantDataService, PortfolioDataService portfolioDataService) {
+    public ReportController(FileImporter fileImporter, TaxDataService taxRelevantDataService,
+                          PortfolioDataService portfolioDataService, TransactionDataService transactionDataService) {
         this.fileImporter = fileImporter;
         this.taxRelevantDataService = taxRelevantDataService;
         this.portfolioDataService = portfolioDataService;
+        this.transactionDataService = transactionDataService;
     }
 
     @PostMapping("/upload")
@@ -337,6 +341,127 @@ public class ReportController {
                 Portfolio portfolio = portfolioDataService.createPortfolio(report);
                 PortfolioSummary summary = createPortfolioSummary(portfolio);
                 return ResponseEntity.ok(summary);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    // === TRANSACTION DATA ENDPOINTS ===
+
+    /**
+     * Gibt alle Transaktionen zurück
+     */
+    @GetMapping("/transactions")
+    public ResponseEntity<List<SymbolTransactions>> getAllTransactions() {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                List<SymbolTransactions> transactions = transactionDataService.processTransactions(report);
+                return ResponseEntity.ok(transactions);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt Transaktionen gruppiert nach Asset-Key zurück
+     */
+    @GetMapping("/transactions/by-asset-key")
+    public ResponseEntity<Map<String, SymbolTransactions>> getTransactionsByAssetKey() {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                Map<String, SymbolTransactions> transactions = transactionDataService.getTransactionsByAssetKey(report);
+                return ResponseEntity.ok(transactions);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt Transaktionen gruppiert nach Symbol zurück
+     */
+    @GetMapping("/transactions/by-symbol")
+    public ResponseEntity<Map<String, SymbolTransactions>> getTransactionsBySymbol() {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                Map<String, SymbolTransactions> transactions = transactionDataService.getTransactionsBySymbol(report);
+                return ResponseEntity.ok(transactions);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt alle einzelnen Transaktionen zurück
+     */
+    @GetMapping("/transactions/all")
+    public ResponseEntity<List<Transaction>> getAllIndividualTransactions() {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                List<Transaction> transactions = transactionDataService.extractAllTransactions(report);
+                return ResponseEntity.ok(transactions);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt Transaktionszusammenfassung zurück
+     */
+    @GetMapping("/transactions/summary")
+    public ResponseEntity<TransactionDataService.TransactionSummary> getTransactionSummary() {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                TransactionDataService.TransactionSummary summary = transactionDataService.getTransactionSummary(report);
+                return ResponseEntity.ok(summary);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt alle Transaktionen für ein bestimmtes Steuerjahr zurück
+     */
+    @GetMapping("/transactions/year/{taxYear}")
+    public ResponseEntity<List<Transaction>> getTransactionsByYear(@PathVariable int taxYear) {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                List<Transaction> transactions = transactionDataService.extractTransactions(report, taxYear);
+                return ResponseEntity.ok(transactions);
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Gibt eine spezifische Transaktion zurück
+     */
+    @GetMapping("/transactions/{transactionId}")
+    public ResponseEntity<Transaction> getTransaction(@PathVariable String transactionId) {
+        if (!fileImporter.hasUploadedFile()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return getCurrentReportSafely()
+            .map(report -> {
+                Transaction transaction = transactionDataService.getTransactionById(report, transactionId);
+                return ResponseEntity.ok(transaction);
             })
             .orElse(ResponseEntity.notFound().build());
     }

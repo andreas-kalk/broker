@@ -85,6 +85,39 @@ export const portfolioService = {
     },
 } as const;
 
+export const transactionService = {
+    async getAllTransactions(): Promise<SymbolTransactions[]> {
+        return api.get('/reports/transactions').then(extractData);
+    },
+
+    async getTransactionsByAssetKey(): Promise<Record<string, SymbolTransactions>> {
+        return api.get('/reports/transactions/by-asset-key').then(extractData);
+    },
+
+    async getTransactionsBySymbol(): Promise<Record<string, SymbolTransactions>> {
+        return api.get('/reports/transactions/by-symbol').then(extractData);
+    },
+
+    async getAllIndividualTransactions(): Promise<Transaction[]> {
+        return api.get('/reports/transactions/all').then(extractData);
+    },
+
+    async getTransactionSummary(): Promise<TransactionSummary> {
+        return api.get('/reports/transactions/summary').then(extractData);
+    },
+
+    async getTransactionsByYear(taxYear: number): Promise<Transaction[]> {
+        return api.get(`/reports/transactions/year/${taxYear}`).then(extractData);
+    },
+
+    async getTransaction(transactionId: string): Promise<Transaction> {
+        return api.get(`/reports/transactions/${transactionId}`).then(extractData);
+    },
+} as const;
+
+// Export transaction types
+export type { SymbolTransactions, TransactionSummary };
+
 export interface UploadResponse {
     success: boolean;
     message: string;
